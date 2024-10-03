@@ -1,4 +1,3 @@
 package Pojos;
 
-public class State {
-}
+public enum State {STABLE, GOOD, BAD}

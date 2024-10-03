@@ -11,6 +11,8 @@ public class Doctor {
     private String surname;
     private List<Patient> patients;
 
+    private ConnectionManager access;
+
     public Doctor(String name, String surname, List<Patient> patients) {
         this.name = name;
         this.surname = surname;
@@ -66,8 +68,6 @@ public class Doctor {
     public ConnectionManager getAccess() {
         return access;
     }
-
-    private ConnectionManager access;
 
 
 

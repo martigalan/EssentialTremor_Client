@@ -1,6 +1,6 @@
 package Pojos;
 
-import Authentication.ConnectionManager;
+import jdbc.ConnectionManager;
 
 import java.util.List;
 import java.util.Objects;

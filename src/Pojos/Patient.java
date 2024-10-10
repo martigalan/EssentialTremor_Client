@@ -4,13 +4,12 @@ public class Patient {
     private int id;
     private String name;
     private String surname;
-    private int age;
-    //private EMG emg; ??
-    //private ACC acc; ??
+    private Boolean genetic_background; //TODO como el nombre automatico
     private Doctor doctor;
     private State state;
     private Treatment treatment;
     private User user;
+    private MedicalRecord form;//TODO
 
     public Patient() {
     }
@@ -19,7 +18,6 @@ public class Patient {
         this.id = id;
         this.name = name;
         this.surname = surname;
-        this.age = age;
         this.doctor = doctor;
         this.state = state;
         this.treatment = treatment;
@@ -48,14 +46,6 @@ public class Patient {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public Doctor getDoctor() {
@@ -96,7 +86,6 @@ public class Patient {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", age=" + age +
                 ", doctor=" + doctor +
                 ", state=" + state +
                 ", treatment=" + treatment +

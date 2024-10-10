@@ -1,3 +1,3 @@
 package Pojos;
 
-public enum State {STABLE, GOOD, BAD}
+public enum State {STABLE, GOOD, BAD, CLOSED}

@@ -1,5 +1,7 @@
 package Pojos;
 
+import jdbc.ConnectionManager;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -9,12 +11,13 @@ public class Patient {
     private int id;
     private String name;
     private String surname;
-    private Boolean genetic_background; //TODO como el nombre automatico, cuando se pregunta?
+    private Boolean genetic_background;
     private Doctor doctor;
     private State state;
     private Treatment treatment;
     private User user;
-    private MedicalRecord form;//TODO
+    private MedicalRecord form;
+    private ConnectionManager access;
 
     public Patient() {
 
@@ -29,6 +32,8 @@ public class Patient {
         this.treatment = treatment;
         this.user = user;
     }
+
+
 
     public int getId() {
         return id;
@@ -89,13 +94,11 @@ public class Patient {
     @Override
     public String toString() {
         return "Patient{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", doctor=" + doctor +
                 ", state=" + state +
                 ", treatment=" + treatment +
-                ", user=" + user +
                 '}';
     }
 
@@ -121,6 +124,11 @@ public class Patient {
         List<String> symptoms = Arrays.asList(symptomsInput.split(","));
         symptoms = symptoms.stream().map(String::trim).collect(Collectors.toList()); // Trim extra spaces
 
+        sc.close();
         return new MedicalRecord(age, weight, height, symptoms);
+    }
+
+    private void seeAnnotations() {
+        //TODO
     }
 }

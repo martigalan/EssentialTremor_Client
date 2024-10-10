@@ -95,4 +95,16 @@ public class MedicalRecord {
         this.height = height;
         this.symptoms = symptoms;
     }
+
+    @Override
+    public String toString() {
+        return "MedicalRecord{" +
+                "patientName='" + patientName + '\'' +
+                ", age=" + age +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", symptoms=" + symptoms +
+                ", genetic_background=" + genetic_background +
+                '}';
+    }
 }

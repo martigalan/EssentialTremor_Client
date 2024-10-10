@@ -103,6 +103,7 @@ public class Patient {
         MedicalRecord record = askData();
         record.setPatientName(this.name);
         record.setGenetic_background(this.genetic_background);
+        //TODO acc and emg
     }
 
     private MedicalRecord askData() {
@@ -120,7 +121,6 @@ public class Patient {
         List<String> symptoms = Arrays.asList(symptomsInput.split(","));
         symptoms = symptoms.stream().map(String::trim).collect(Collectors.toList()); // Trim extra spaces
 
-        // Create and return a MedicalRecord object with collected data
         return new MedicalRecord(age, weight, height, symptoms);
     }
 }

@@ -1,10 +1,15 @@
 package Pojos;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
 public class Patient {
     private int id;
     private String name;
     private String surname;
-    private Boolean genetic_background; //TODO como el nombre automatico
+    private Boolean genetic_background; //TODO como el nombre automatico, cuando se pregunta?
     private Doctor doctor;
     private State state;
     private Treatment treatment;
@@ -12,6 +17,7 @@ public class Patient {
     private MedicalRecord form;//TODO
 
     public Patient() {
+
     }
 
     public Patient(int id, String name, String surname, int age, Doctor doctor, State state, Treatment treatment, User user) {
@@ -91,5 +97,30 @@ public class Patient {
                 ", treatment=" + treatment +
                 ", user=" + user +
                 '}';
+    }
+
+    private void openRecord(){
+        MedicalRecord record = askData();
+        record.setPatientName(this.name);
+        record.setGenetic_background(this.genetic_background);
+    }
+
+    private MedicalRecord askData() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("- Age: ");
+        int age = sc.nextInt();
+        System.out.println("- Weight (kg): ");
+        double weight = sc.nextDouble();
+        System.out.println("- Height (cm): ");
+        int height = sc.nextInt();
+        System.out.println("- Symptoms (enter symptoms separated by commas): ");
+        String symptomsInput = sc.nextLine();
+
+        List<String> symptoms = Arrays.asList(symptomsInput.split(","));
+        symptoms = symptoms.stream().map(String::trim).collect(Collectors.toList()); // Trim extra spaces
+
+        // Create and return a MedicalRecord object with collected data
+        return new MedicalRecord(age, weight, height, symptoms);
     }
 }

@@ -11,6 +11,7 @@ public class Patient {
     private int id;
     private String name;
     private String surname;
+    private int age;
     private Boolean genetic_background;
     private Doctor doctor;
     private State state;
@@ -19,20 +20,19 @@ public class Patient {
     private MedicalRecord form;
     private ConnectionManager access;
 
-    public Patient() {
 
-    }
-
-    public Patient(int id, String name, String surname, int age, Doctor doctor, State state, Treatment treatment, User user) {
-        this.id = id;
+    public Patient(String name, String surname, int age) {
         this.name = name;
         this.surname = surname;
-        this.doctor = doctor;
-        this.state = state;
-        this.treatment = treatment;
-        this.user = user;
+        this.age = age;
     }
 
+    public Patient(String name, String surname, Boolean genBack, int age) {
+        this.name = name;
+        this.surname = surname;
+        this.genetic_background = genBack;
+        this.age = age;
+    }
 
 
     public int getId() {
@@ -93,39 +93,34 @@ public class Patient {
 
     @Override
     public String toString() {
-        return "Patient{" +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", doctor=" + doctor +
-                ", state=" + state +
-                ", treatment=" + treatment +
-                '}';
+        return "- Name: " + name + '\'' +
+                "- Surname: " + surname + '\'' +
+                "- State: " + state +
+                "- Treatment: " + treatment+
+                "- Doctor: " + doctor;
     }
 
     private void openRecord(){
         MedicalRecord record = askData();
         record.setPatientName(this.name);
         record.setGenetic_background(this.genetic_background);
+        record.setAge(this.age);
         //TODO acc and emg
     }
 
     private MedicalRecord askData() {
-        Scanner sc = new Scanner(System.in);
 
-        System.out.println("- Age: ");
-        int age = sc.nextInt();
         System.out.println("- Weight (kg): ");
-        double weight = sc.nextDouble();
+        double weight = UserInput.getDouble("");
         System.out.println("- Height (cm): ");
-        int height = sc.nextInt();
+        int height = UserInput.getInt("");
         System.out.println("- Symptoms (enter symptoms separated by commas): ");
-        String symptomsInput = sc.nextLine();
+        String symptomsInput = UserInput.getString("");
 
         List<String> symptoms = Arrays.asList(symptomsInput.split(","));
         symptoms = symptoms.stream().map(String::trim).collect(Collectors.toList()); // Trim extra spaces
 
-        sc.close();
-        return new MedicalRecord(age, weight, height, symptoms);
+        return new MedicalRecord(weight, height, symptoms);
     }
 
     private void seeAnnotations() {

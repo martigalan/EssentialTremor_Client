@@ -80,17 +80,7 @@ public class MedicalRecord {
         return emg;
     }
 
-    public MedicalRecord(String patientName, int age, double weight, int height, List<String> symptoms, ACC acceleration, EMG emg) {
-        this.patientName = patientName;
-        this.age = age;
-        this.weight = weight;
-        this.height = height;
-        this.symptoms = symptoms;
-        this.acceleration = acceleration;
-        this.emg = emg;
-    }
-    public MedicalRecord(int age, double weight, int height, List<String> symptoms) {
-        this.age = age;
+    public MedicalRecord(double weight, int height, List<String> symptoms) {
         this.weight = weight;
         this.height = height;
         this.symptoms = symptoms;

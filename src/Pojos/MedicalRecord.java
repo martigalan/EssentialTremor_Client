@@ -97,4 +97,12 @@ public class MedicalRecord {
                 ", genetic_background=" + genetic_background +
                 '}';
     }
+
+    private void showAcc() {
+        //TODO
+    }
+
+    private void showEMG(){
+        //TODO
+    }
 }

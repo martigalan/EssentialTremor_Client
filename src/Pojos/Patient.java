@@ -123,7 +123,9 @@ public class Patient {
         return new MedicalRecord(weight, height, symptoms);
     }
 
-    private void seeAnnotations() {
+    private void seeDoctorsNotes() { //The comments the doctor had to say about the patients disease
         //TODO
+        System.out.println("- State:" + this.getState());
+        System.out.println("- Treatment:" + this.getTreatment());
     }
 }

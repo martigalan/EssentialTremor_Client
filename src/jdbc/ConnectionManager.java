@@ -45,10 +45,57 @@ public class ConnectionManager implements InterfaceConnectionManager {
     public void createTables() {
         try {
             Statement stmt = c.createStatement();
-            String table = "";
+            String table = "CREATE TABLE Doctor (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    name TEXT NOT NULL," +
+                    "    surname TEXT NOT NULL" +
+                    ");";
             stmt.executeUpdate(table);
-            String table1 = "";
+            String table1= "CREATE TABLE state (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    name TEXT NOT NULL," +
+                    "    description TEXT NOT NULL" +
+                    ");";
             stmt.executeUpdate(table1);
+            String table2 = "CREATE TABLE Treatment (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    name TEXT NOT NULL," +
+                    "    description TEXT NOT NULL" +
+                    ");";
+            stmt.executeUpdate(table2);
+            String table3 = "CREATE TABLE User (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    username TEXT NOT NULL," +
+                    "    password TEXT NOT NULL" +
+                    ");";
+            stmt.executeUpdate(table3);
+            String table4 = "CREATE TABLE MedicalRecord (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    patient_id INTEGER," +
+                    "    age INTEGER NOT NULL," +
+                    "    weight DOUBLE NOT NULL," +
+                    "    height INTEGER NOT NULL," +
+                    "    genetic_background BOOLEAN," +
+                    "    symptoms TEXT," +
+                    "    FOREIGN KEY (patient_id) REFERENCES Patient(id) ON DELETE CASCADE" +
+                    ");";
+            stmt.executeUpdate(table4);
+            String table5 = "CREATE TABLE Patient (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    name TEXT NOT NULL," +
+                    "    surname TEXT NOT NULL," +
+                    "    genetic_background BOOLEAN," +
+                    "    doctor_id INTEGEER," +
+                    "    state_id INTEGER," +
+                    "    treatment_id INTEGER," +
+                    "    user_id INTEGER," +
+                    "    medical_record_id INTEGER," +
+                    "    FOREIGN KEY (doctor_id) REFERENCES Doctor(id)," +
+                    "    FOREIGN KEY (state_id) REFERENCES State(id)," +
+                    "    FOREIGN KEY (treatment_id) REFERENCES Treatment(id)," +
+                    "    FOREIGN KEY (user_id) REFERENCES User(id)" +
+                    ");";
+            stmt.executeUpdate(table5);
         } catch (SQLException e) {
             // Check if the exception is because the tables already exist
             if (e.getMessage().contains("already exist")) {

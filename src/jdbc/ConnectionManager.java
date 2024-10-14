@@ -96,6 +96,22 @@ public class ConnectionManager implements InterfaceConnectionManager {
                     "    FOREIGN KEY (user_id) REFERENCES User(id)" +
                     ");";
             stmt.executeUpdate(table5);
+            String table6 = "CREATE TABLE emg_signals (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    signal_data TEXT," +
+                    "    filename TEXT," +
+                    "    path TEXT," +
+                    "    timestamp DATETIME" +
+                    ");";
+            stmt.executeUpdate(table6);
+            String table7 = "CREATE TABLE acc_signals (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    signal_data TEXT," +
+                    "    filename TEXT," +
+                    "    path TEXT," +
+                    "    timestamp DATETIME" +
+                    ");";
+            stmt.executeUpdate(table7);
         } catch (SQLException e) {
             // Check if the exception is because the tables already exist
             if (e.getMessage().contains("already exist")) {

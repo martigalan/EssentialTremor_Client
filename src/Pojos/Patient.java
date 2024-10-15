@@ -17,7 +17,7 @@ public class Patient {
     private State state;
     private Treatment treatment;
     private User user;
-    private MedicalRecord form;
+    private MedicalRecord medicalRecord;
     private ConnectionManager access;
 
 
@@ -91,6 +91,14 @@ public class Patient {
         this.user = user;
     }
 
+    public MedicalRecord getMedicalRecord() {
+        return medicalRecord;
+    }
+
+    public void setMedicalRecord(MedicalRecord medicalRecord) {
+        this.medicalRecord = medicalRecord;
+    }
+
     @Override
     public String toString() {
         return "- Name: " + name + '\'' +
@@ -103,9 +111,11 @@ public class Patient {
     private void openRecord(){
         MedicalRecord record = askData();
         record.setPatientName(this.name);
+        record.setPatientSurname(this.surname);
         record.setGenetic_background(this.genetic_background);
         record.setAge(this.age);
         //TODO acc and emg
+        this.setMedicalRecord(record);
     }
 
     private MedicalRecord askData() {
@@ -124,8 +134,14 @@ public class Patient {
     }
 
     private void seeDoctorsNotes() { //The comments the doctor had to say about the patients disease
-        //TODO
         System.out.println("- State:" + this.getState());
         System.out.println("- Treatment:" + this.getTreatment());
+    }
+
+    public static void main(String[] args) {
+        Patient p1 = new Patient("a","a",Boolean.TRUE,20);
+
+        p1.openRecord();
+        System.out.println(p1.getMedicalRecord());
     }
 }

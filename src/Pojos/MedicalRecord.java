@@ -8,6 +8,7 @@ import java.util.List;
 public class MedicalRecord {
 
     private String patientName;
+    private String patientSurname;
     private int age;
     private double weight;
     private int height;
@@ -46,6 +47,14 @@ public class MedicalRecord {
 
     public void setSymptoms(List<String> symptoms) {
         this.symptoms = symptoms;
+    }
+
+    public String getPatientSurname() {
+        return patientSurname;
+    }
+
+    public void setPatientSurname(String patientSurname) {
+        this.patientSurname = patientSurname;
     }
 
     public void setAcceleration(ACC acceleration) {
@@ -90,6 +99,7 @@ public class MedicalRecord {
     public String toString() {
         return "MedicalRecord{" +
                 "patientName='" + patientName + '\'' +
+                ", surname= '"+ patientSurname + '\''+
                 ", age=" + age +
                 ", weight=" + weight +
                 ", height=" + height +

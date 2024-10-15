@@ -15,15 +15,15 @@ public class JDBCSignalManager implements SignalManager {
         this.cM = cM;
     }
 
-    @Override
+
     public void saveEMGSignal(EMG emg) {
         String query = "INSERT INTO emg_signals (signal_data, filename, path, timestamp) VALUES (?, ?, ?, ?)";
         try (Connection conn = cM.getConnection();
             PreparedStatement prep = conn.prepareStatement(query)) {
-            prep.setString(1, emg.getSignalData());
+            prep.setString(1, emg.listToString(emg.getSignalData()));
             prep.setString(2, emg.getFilename());
             prep.setString(3, emg.getPath());
-            prep.setString(4, emg.getTimestamp());
+            prep.setString(4, emg.listToString(emg.getTimestamp()));
             prep.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,17 +35,16 @@ public class JDBCSignalManager implements SignalManager {
         String query = "INSERT INTO acc_signals (signal_data, filename, path, timestamp) VALUES (?, ?, ?, ?)";
         try (Connection conn = cM.getConnection();
              PreparedStatement prep = conn.prepareStatement(query)) {
-            prep.setString(1, acc.getSignalData());
+            prep.setString(1, acc.listToString(acc.getSignalData()));
             prep.setString(2, acc.getFilename());
             prep.setString(3, acc.getPath());
-            prep.setString(4, acc.getTimestamp());
+            prep.setString(4, acc.listToString(acc.getTimestamp()));
             prep.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
     public EMG getEMGSignal(int id) {
         return null;
     }

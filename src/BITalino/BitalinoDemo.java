@@ -1,6 +1,9 @@
 package BITalino;
 
 
+import Data.ACC;
+import Data.EMG;
+
 import java.util.Vector;
 
 import javax.bluetooth.RemoteDevice;
@@ -28,16 +31,20 @@ public class BitalinoDemo {
             String macAddress = "20:17:11:20:51:27";
             
             //Sampling rate, should be 10, 100 or 1000
-            int SamplingRate = 10;
+            int SamplingRate = 100;
             bitalino.open(macAddress, SamplingRate);
 
-            // Start acquisition on analog channels A2 and A6
-            // For example, If you want A1, A3 and A4 you should use {0,2,3}
+            //0--1= EMG
+            //5--6=ACC
             int[] channelsToAcquire = {0, 5};
             bitalino.start(channelsToAcquire);
 
+            //Objects EMG and ACC
+            ACC acc = new ACC();
+            EMG emg = new EMG();
+
             //Read in total 10000000 times
-            for (int j = 0; j < 10000000; j++) {
+            for (int j = 0; j < 100; j++) { //TODO CHANGE
 
                 //Each time read a block of 10 samples 
                 int block_size=10;
@@ -47,9 +54,16 @@ public class BitalinoDemo {
 
                 //Print the samples
                 for (int i = 0; i < frame.length; i++) {
-                    System.out.println((j * block_size + i) + " seq: " + frame[i].seq + " "
-                            + frame[i].analog[0] + " "
-                            + frame[i].analog[1] + " "
+
+                    acc.getTimestamp().add(j * block_size + i);
+                    emg.getTimestamp().add(j * block_size + i);
+
+                    emg.getSignalData().add(frame[i].analog[0]);
+                    acc.getSignalData().add(frame[i].analog[1]);
+                    System.out.println((j * block_size + i)//Time
+                                    + " seq: " + frame[i].seq + " "
+                            + frame[i].analog[0] + " "//EMG
+                            + frame[i].analog[1] + " "//ACC
                     //  + frame[i].analog[2] + " "
                     //  + frame[i].analog[3] + " "
                     //  + frame[i].analog[4] + " "
@@ -60,6 +74,12 @@ public class BitalinoDemo {
             }
             //stop acquisition
             bitalino.stop();
+
+            System.out.println(emg.getTimestamp());
+            System.out.println(emg.getSignalData());
+            System.out.println(acc.getSignalData());
+
+
         } catch (BITalinoException ex) {
             Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Throwable ex) {

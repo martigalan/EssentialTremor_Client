@@ -211,14 +211,15 @@ public class Doctor {
         }
     }
 
-
-    public static void main(String[] args) { //TODO delete when finished
+    /*public static void main(String[] args) { //TODO delete when finished
 
         Patient p1 = new Patient("b", "b", 20);
         Patient p2 = new Patient("c", "c", 20);
         List<Patient> patients = new ArrayList<>();
         patients.add(p1);
         patients.add(p2);
+        patients.get(1).setState(State.GOOD);
+        System.out.println(patients.get(1).getState());
         Doctor doctor = new Doctor("a", "a", patients);
 
         Patient p = doctor.choosePatient();
@@ -227,5 +228,7 @@ public class Doctor {
         doctor.addPatient();
         Patient p3 = doctor.choosePatient();
         System.out.println(p3);
-    }
+
+
+    }*/
 }

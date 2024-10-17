@@ -15,6 +15,8 @@ public class JDBCStateManager implements StateManager {
     public JDBCStateManager (ConnectionManager cManager){
         this.cM = cManager;
     }
+
+    @Override
     public void addState() {
         for (State state : State.values()) {
             try {

@@ -6,37 +6,17 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Patient {
-    private int id;
     private String name;
     private String surname;
-    private int age;
     private Boolean genetic_background;
-    private State state;
-    private Treatment treatment;
     private User user;
-    private MedicalRecord medicalRecord;
+    private List<MedicalRecord> medicalRecords;
+    //TODO should it have a list of Doctors? If so, create here a Doctor class
 
-
-    public Patient(String name, String surname, int age) {
-        this.name = name;
-        this.surname = surname;
-        this.age = age;
-    }
-
-    public Patient(String name, String surname, Boolean genBack, int age) {
+    public Patient(String name, String surname, Boolean genBack) {
         this.name = name;
         this.surname = surname;
         this.genetic_background = genBack;
-        this.age = age;
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -55,22 +35,6 @@ public class Patient {
         this.surname = surname;
     }
 
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
-
-    public Treatment getTreatment() {
-        return treatment;
-    }
-
-    public void setTreatment(Treatment treatment) {
-        this.treatment = treatment;
-    }
-
     public User getUser() {
         return user;
     }
@@ -79,20 +43,20 @@ public class Patient {
         this.user = user;
     }
 
-    public MedicalRecord getMedicalRecord() {
-        return medicalRecord;
+    public List<MedicalRecord> getMedicalRecords() {
+        return medicalRecords;
     }
 
-    public void setMedicalRecord(MedicalRecord medicalRecord) {
-        this.medicalRecord = medicalRecord;
+    public void setMedicalRecord(List<MedicalRecord> medicalRecords) {
+        this.medicalRecords = medicalRecords;
     }
 
     @Override
     public String toString() {
         return "- Name: " + name + '\'' +
-                "- Surname: " + surname + '\'' +
-                "- State: " + state +
-                "- Treatment: " + treatment;
+                "- Surname: " + surname + '\'';
+                //"- State: " + state +
+                //"- Treatment: " + treatment;
     }
 
     private void openRecord(){
@@ -100,35 +64,29 @@ public class Patient {
         record.setPatientName(this.name);
         record.setPatientSurname(this.surname);
         record.setGenetic_background(this.genetic_background);
-        record.setAge(this.age);
         //TODO acc and emg
-        this.setMedicalRecord(record);
+        this.getMedicalRecords().add(record);
     }
 
     private MedicalRecord askData() {
-
+        Scanner sc = new Scanner(System.in);
+        System.out.println("- Age: ");
+        int age = sc.nextInt();
         System.out.println("- Weight (kg): ");
-        double weight = UserInput.getDouble(""); //TODO cambiar a Scanner
+        double weight = sc.nextDouble();
         System.out.println("- Height (cm): ");
-        int height = UserInput.getInt("");
+        int height = sc.nextInt();
         System.out.println("- Symptoms (enter symptoms separated by commas): ");
-        String symptomsInput = UserInput.getString("");
+        String symptomsInput = sc.nextLine();
 
+        //Takes the symptoms input and creates a List
         List<String> symptoms = Arrays.asList(symptomsInput.split(","));
         symptoms = symptoms.stream().map(String::trim).collect(Collectors.toList()); // Trim extra spaces
 
-        return new MedicalRecord(weight, height, symptoms);
+        return new MedicalRecord(age, weight, height, symptoms);
     }
 
-    private void seeDoctorsNotes() { //The comments the doctor had to say about the patients disease
-        System.out.println("- State:" + this.getState());
-        System.out.println("- Treatment:" + this.getTreatment());
-    }
-
-    public static void main(String[] args) {
-        Patient p1 = new Patient("a","a",Boolean.TRUE,20);
-
-        p1.openRecord();
-        System.out.println(p1.getMedicalRecord());
+    private void seeDoctorsNotes() {
+        //TODO
     }
 }

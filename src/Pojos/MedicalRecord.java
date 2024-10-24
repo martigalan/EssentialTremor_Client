@@ -16,6 +16,14 @@ public class MedicalRecord {
     private ACC acceleration;
     private EMG emg;
     private Boolean genetic_background;
+    private List<DoctorsNote> doctorsNotes;
+
+    public List<DoctorsNote> getDoctorsNotes() {
+        return doctorsNotes;
+    }
+    public void setDoctorsNotes(List<DoctorsNote> doctorsNotes) {
+        this.doctorsNotes = doctorsNotes;
+    }
 
     public Boolean getGenetic_background() {
         return genetic_background;
@@ -89,7 +97,8 @@ public class MedicalRecord {
         return emg;
     }
 
-    public MedicalRecord(double weight, int height, List<String> symptoms) {
+    public MedicalRecord(int age, double weight, int height, List<String> symptoms) {
+        this.age = age;
         this.weight = weight;
         this.height = height;
         this.symptoms = symptoms;

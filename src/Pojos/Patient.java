@@ -1,7 +1,5 @@
 package Pojos;
 
-import jdbc.ConnectionManager;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -13,12 +11,10 @@ public class Patient {
     private String surname;
     private int age;
     private Boolean genetic_background;
-    private Doctor doctor;
     private State state;
     private Treatment treatment;
     private User user;
     private MedicalRecord medicalRecord;
-    private ConnectionManager access;
 
 
     public Patient(String name, String surname, int age) {
@@ -59,14 +55,6 @@ public class Patient {
         this.surname = surname;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
     public State getState() {
         return state;
     }
@@ -104,8 +92,7 @@ public class Patient {
         return "- Name: " + name + '\'' +
                 "- Surname: " + surname + '\'' +
                 "- State: " + state +
-                "- Treatment: " + treatment+
-                "- Doctor: " + doctor;
+                "- Treatment: " + treatment;
     }
 
     private void openRecord(){
@@ -121,7 +108,7 @@ public class Patient {
     private MedicalRecord askData() {
 
         System.out.println("- Weight (kg): ");
-        double weight = UserInput.getDouble("");
+        double weight = UserInput.getDouble(""); //TODO cambiar a Scanner
         System.out.println("- Height (cm): ");
         int height = UserInput.getInt("");
         System.out.println("- Symptoms (enter symptoms separated by commas): ");

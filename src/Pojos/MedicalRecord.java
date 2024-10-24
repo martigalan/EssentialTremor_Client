@@ -17,6 +17,7 @@ public class MedicalRecord {
     private EMG emg;
     private Boolean genetic_background;
     private List<DoctorsNote> doctorsNotes;
+    //TODO should it have a list of Doctors? If so, create here a Doctor class
 
     public List<DoctorsNote> getDoctorsNotes() {
         return doctorsNotes;

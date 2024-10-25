@@ -3,7 +3,6 @@ package Pojos;
 public class DoctorsNote {
 
     private String notes;
-    //TODO should it have a list of Doctors? If so, create here a Doctor class
 
 
     public DoctorsNote(String notes) {

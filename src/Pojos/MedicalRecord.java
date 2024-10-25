@@ -17,8 +17,15 @@ public class MedicalRecord {
     private EMG emg;
     private Boolean genetic_background;
     private List<DoctorsNote> doctorsNotes;
-    //TODO should it have a list of Doctors? If so, create here a Doctor class
+    private List<Doctor> doctors;
+    //TODO should it have a list of Doctors?
 
+    public List<Doctor> getDoctors() {
+        return doctors;
+    }
+    public void setDoctors(List<Doctor> doctors) {
+        this.doctors = doctors;
+    }
     public List<DoctorsNote> getDoctorsNotes() {
         return doctorsNotes;
     }
@@ -118,11 +125,11 @@ public class MedicalRecord {
                 '}';
     }
 
-    private void showAcc() {
+    void showAcc() {
         //TODO
     }
 
-    private void showEMG(){
+    void showEMG(){
         //TODO
     }
 }

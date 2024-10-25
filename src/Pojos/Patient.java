@@ -1,5 +1,6 @@
 package Pojos;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -11,12 +12,26 @@ public class Patient {
     private Boolean genetic_background;
     private User user;
     private List<MedicalRecord> medicalRecords;
-    //TODO should it have a list of Doctors? If so, create here a Doctor class
+    private List<Doctor> doctors;
 
     public Patient(String name, String surname, Boolean genBack) {
         this.name = name;
         this.surname = surname;
         this.genetic_background = genBack;
+        this.medicalRecords = new ArrayList<MedicalRecord>();
+        this.doctors = new ArrayList<Doctor>();
+    }
+
+    public void setMedicalRecords(List<MedicalRecord> medicalRecords) {
+        this.medicalRecords = medicalRecords;
+    }
+
+    public List<Doctor> getDoctors() {
+        return doctors;
+    }
+
+    public void setDoctors(List<Doctor> doctors) {
+        this.doctors = doctors;
     }
 
     public String getName() {
@@ -82,11 +97,11 @@ public class Patient {
         //Takes the symptoms input and creates a List
         List<String> symptoms = Arrays.asList(symptomsInput.split(","));
         symptoms = symptoms.stream().map(String::trim).collect(Collectors.toList()); // Trim extra spaces
-
+        sc.close();
         return new MedicalRecord(age, weight, height, symptoms);
     }
 
     private void seeDoctorsNotes() {
-        //TODO
+        //TODO here the patient chooses what record they want to see
     }
 }

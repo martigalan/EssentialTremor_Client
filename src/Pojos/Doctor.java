@@ -118,6 +118,9 @@ public class Doctor {
         this.getDoctorsNote().add(doctorsNote);
         return doctorsNote;
     }
+    private void sendDoctorsNote(DoctorsNote doctorsNote){
+        //TODO, send info to server
+    }
 
     private void addPatient(){
         Scanner sc = new Scanner(System.in);

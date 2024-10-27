@@ -1,4 +1,4 @@
-package Pojos;
+package pojos;
 
 public class DoctorsNote {
 
@@ -16,4 +16,6 @@ public class DoctorsNote {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+
 }

@@ -1,4 +1,4 @@
-package Pojos;
+package pojos;
 
 public enum Treatment {
     SURGERY("The patient needs surgery."),

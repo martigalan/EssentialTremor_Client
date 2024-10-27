@@ -1,4 +1,4 @@
-package Pojos;
+package pojos;
 
 public enum State {
     STABLE("The patient is stable and under control."),

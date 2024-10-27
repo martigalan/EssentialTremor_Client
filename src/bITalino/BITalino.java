@@ -36,7 +36,7 @@
 
   */
 
-package BITalino;
+package bITalino;
 
 import java.io.IOException;
 import java.io.DataInputStream;
@@ -46,10 +46,7 @@ import javax.bluetooth.RemoteDevice;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
-
-import BITalino.DeviceDiscoverer;
-
-/// The %BITalino device class.
+ /// The %BITalino device class.
 public class BITalino {
 	
         /// Array with the list of analog inputs to be acquired from the device (auxiliary variable)

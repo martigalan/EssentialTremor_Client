@@ -60,7 +60,7 @@ public class ACC {
 
         @Override
     public String toString() {
-       return "ACC [filename=" + filename + ", path=" + path + ", timestamp=" + timestamp + "]";
+       return "ACC [filename=" + filename + ", path=" + path + ", timestamp=" + timestamp + ", signalData=" + signalData+"]";
     }
 
     public static String listToString(List<Integer> list) {

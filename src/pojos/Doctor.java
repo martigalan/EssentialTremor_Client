@@ -25,7 +25,7 @@ public class Doctor {
     public String toString() {
         return "Doctor{" +
                 "name='" + name + '\'' +
-                ", surname='" + surname + '\''+
+                ", surname='" + surname + '\'' +
                 '}';
     }
 
@@ -95,19 +95,24 @@ public class Doctor {
         return listOfPatients.get(number - 1);
     }
 
-    private MedicalRecord receiveMedicalRecord(){
+    private MedicalRecord receiveMedicalRecord() {
         //TODO with sockets, ONLY receive the record and build a new one from the single parameters
-        //MedicalRecord medicalRecord = new MedicalRecord();
+        //MedicalRecord medicalRecord = new MedicalRecord(...);
         //this.getMedicalRecords().add(medicalRecord);
+        //medicalRecord().getDoctors().add(this);
+        //DoctorsNote doctorsNote = createDoctorsNote(medicalRecord);
+        //medicalRecord.getDoctorsNotes().add(doctorsNote);
         return null;
     }
-    private void showInfoMedicalRecord(MedicalRecord medicalRecord){
+
+    private void showInfoMedicalRecord(MedicalRecord medicalRecord) {
         //TODO show info, graphs and everything
         System.out.println(medicalRecord);
         medicalRecord.showAcc();
         medicalRecord.showEMG();
     }
-    private DoctorsNote createDoctorsNote(MedicalRecord medicalRecord){
+
+    private DoctorsNote createDoctorsNote(MedicalRecord medicalRecord) {
         //create a note for the medical record
         Scanner sc = new Scanner(System.in);
         System.out.println("\n Write any comments about the medical record (No enters): ");
@@ -133,43 +138,44 @@ public class Doctor {
         for (int i = 0; i < notes.size(); i++) {
             System.out.println((i + 1) + ": " + notes.get(i).getNotes());
         }
+        sc.close();
+    }
+    public void editDoctorNote () {
+        Scanner sc = new Scanner(System.in);
+        List<DoctorsNote> notes = this.getDoctorsNote();
 
-
-        public void editDoctorNote() {
-            Scanner sc = new Scanner(System.in);
-            List<DoctorsNote> notes = this.getDoctorsNote();
-
-            if (notes.isEmpty()) {
-                System.out.println("No doctor notes available to edit.");
-                return;
-            }
-
-            showDoctorNotes(); // Show all notes
-
-            System.out.println("--- Choose a note by number: ");
-            int choice = sc.nextInt();
-            sc.nextLine(); // Newline
-
-            if (choice < 1 || choice > notes.size()) {
-                System.out.println("Invalid choice.");
-                return;
-            }
-
-            DoctorsNote selectedNote = notes.get(choice - 1);
-
-            System.out.println("Current Comment: " + selectedNote.getNotes());
-            System.out.println("Enter new comment:");
-            String newComment = sc.nextLine();
-            selectedNote.setNotes(newComment);
-
-            System.out.println("Note updated successfully.");
+        if (notes.isEmpty()) {
+            System.out.println("No doctor notes available to edit.");
+            return;
         }
 
-    private void sendDoctorsNote(DoctorsNote doctorsNote){
+        showDoctorNotes(); // Show all notes
+
+        System.out.println("--- Choose a note by number: ");
+        int choice = sc.nextInt();
+        sc.nextLine(); // Newline
+
+        if (choice < 1 || choice > notes.size()) {
+            System.out.println("Invalid choice."); //TODO ask to choose a number again!!!
+            return;
+        }
+
+        DoctorsNote selectedNote = notes.get(choice - 1);
+
+        System.out.println("Current Comment: " + selectedNote.getNotes());
+        System.out.println("Enter new comment:");
+        String newComment = sc.nextLine();
+        selectedNote.setNotes(newComment);
+
+        System.out.println("Note updated successfully.");
+        sc.close();
+    }
+
+    private void sendDoctorsNote (DoctorsNote doctorsNote){
         //TODO, send info to server
     }
 
-    private void addPatient(){
+    private void addPatient () {
         Scanner sc = new Scanner(System.in);
         System.out.println("- Name: ");
         String name = sc.nextLine();
@@ -191,30 +197,10 @@ public class Doctor {
                 System.out.println("---NOT A VALID INPUT, PLEASE TRY AGAIN...");
             }
         }
-        Patient patient = new Patient(name,surname,genBack);
+        Patient patient = new Patient(name, surname, genBack);
         patient.getDoctors().add(this);
         this.getPatients().add(patient);
         sc.close();
     }
-
-    /*public static void main(String[] args) { //TODO delete when finished
-
-        Patient p1 = new Patient("b", "b", 20);
-        Patient p2 = new Patient("c", "c", 20);
-        List<Patient> patients = new ArrayList<>();
-        patients.add(p1);
-        patients.add(p2);
-        patients.get(1).setState(State.GOOD);
-        System.out.println(patients.get(1).getState());
-        Doctor doctor = new Doctor("a", "a", patients);
-
-        Patient p = doctor.choosePatient();
-        System.out.println(p);
-        doctor.updatePatient(p);
-        doctor.addPatient();
-        Patient p3 = doctor.choosePatient();
-        System.out.println(p3);
-
-
-    }*/
 }
+

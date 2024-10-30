@@ -3,6 +3,8 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/bluecove-2.1.1-SNAPSHOT.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/sqlite-jdbc-3.27.2.1.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jfreechart-1.0.19/jfreechart-1.0.19/jfreechart-1.0.19-demo.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jfreechart-1.0.19/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

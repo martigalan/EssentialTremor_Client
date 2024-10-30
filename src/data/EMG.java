@@ -1,5 +1,13 @@
 package data;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,6 +75,33 @@ public class EMG {
         return list.stream()
                 .map(String::valueOf)  // Convierte cada Integer a String
                 .collect(Collectors.joining(","));  // Junta tod separado por comas
+    }
+
+    public void plotSignal() {
+        XYSeries series = new XYSeries("EMG Signal");
+
+        for (int i = 0; i < signalData.size(); i++) {
+            series.add(timestamp.get(i), signalData.get(i));
+        }
+
+        XYSeriesCollection dataset = new XYSeriesCollection(series);
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                "EMG Signal over Time",
+                "Time (ms)",
+                "EMG",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        JFrame frame = new JFrame("Signal Plot");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(chartPanel);
+        frame.pack();
+        frame.setVisible(true);
     }
 
 }

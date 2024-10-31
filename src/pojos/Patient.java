@@ -1,6 +1,17 @@
 package pojos;
 
+import bITalino.BITalino;
+import bITalino.BITalinoException;
+import bITalino.BitalinoDemo;
+import bITalino.Frame;
+import data.ACC;
+import data.Data;
+import data.EMG;
+
+import javax.bluetooth.RemoteDevice;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Patient {
@@ -76,9 +87,94 @@ public class Patient {
         record.setPatientName(this.name);
         record.setPatientSurname(this.surname);
         record.setGenetic_background(this.genetic_background);
-        //TODO acc and emg
+        Data data = obtainData();
+        record.setAcceleration(data.getAcc());
+        record.setEmg(data.getEmg());
         this.getMedicalRecords().add(record);
     }
+
+    private Data obtainData(){
+        Frame[] frame;
+        Data data = null;
+        BITalino bitalino = null;
+        try {
+            bitalino = new BITalino();
+            // Code to find Devices
+            //Only works on some OS
+            Vector<RemoteDevice> devices = bitalino.findDevices();
+            System.out.println(devices);
+
+            //You need TO CHANGE THE MAC ADDRESS
+            //You should have the MAC ADDRESS in a sticker in the Bitalino
+            String macAddress = "20:17:11:20:51:27";
+
+            //Sampling rate, should be 10, 100 or 1000
+            int SamplingRate = 100;
+            bitalino.open(macAddress, SamplingRate);
+
+            //0--1= EMG
+            //5--6=ACC
+            int[] channelsToAcquire = {0, 5};
+            bitalino.start(channelsToAcquire);
+
+            //Objects EMG and ACC
+            ACC acc = new ACC();
+            EMG emg = new EMG();
+
+            //Read in total 10000000 times
+            for (int j = 0; j < 100; j++) {
+
+                //Each time read a block of 10 samples
+                int block_size=10;
+                frame = bitalino.read(block_size);
+
+                System.out.println("size block: " + frame.length);
+
+                //Print the samples
+                for (int i = 0; i < frame.length; i++) {
+
+                    acc.getTimestamp().add(j * block_size + i);
+                    emg.getTimestamp().add(j * block_size + i);
+
+                    emg.getSignalData().add(frame[i].analog[0]);
+                    acc.getSignalData().add(frame[i].analog[1]);
+                    System.out.println((j * block_size + i)//Time
+                                    + " seq: " + frame[i].seq + " "
+                                    + frame[i].analog[0] + " "//EMG
+                                    + frame[i].analog[1] + " "//ACC
+                            //  + frame[i].analog[2] + " "
+                            //  + frame[i].analog[3] + " "
+                            //  + frame[i].analog[4] + " "
+                            //  + frame[i].analog[5]
+                    );
+
+                }
+            }
+            //stop acquisition
+            bitalino.stop();
+
+            /*System.out.println(emg.getTimestamp());
+            System.out.println(emg.getSignalData());
+            System.out.println(acc.getSignalData());*/
+            data = new Data(acc, emg);
+
+        } catch (BITalinoException ex) {
+            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Throwable ex) {
+            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                //close bluetooth connection
+                if (bitalino != null) {
+                    bitalino.close();
+                }
+            } catch (BITalinoException ex) {
+                Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return data;
+    }
+
     private MedicalRecord askData() {
         Scanner sc = new Scanner(System.in);
         System.out.println("- Age: ");
@@ -106,5 +202,13 @@ public class Patient {
     }
     private void seeDoctorsNotes() {
         //TODO here the patient chooses what record they want to see
+    }
+
+    public static void main(String[] args){
+        Patient p = new Patient("a", "a", Boolean.TRUE);
+        p.openRecord();
+        for (int i=0; i<p.getMedicalRecords().size();i++){
+            System.out.println(p.getMedicalRecords().get(i));
+        }
     }
 }

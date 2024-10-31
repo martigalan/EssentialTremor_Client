@@ -146,15 +146,18 @@ public class Doctor {
 
             showDoctorNotes(); // Show all notes
 
-            System.out.println("--- Choose a note by number: ");
-            int choice = sc.nextInt();
-            sc.nextLine(); // Newline
+            int choice = -1;
+            while (true) {
+                System.out.println("---> Choose a note to edit by number: ");
+                choice = sc.nextInt();
+                sc.nextLine(); // Consume newline
 
-            if (choice < 1 || choice > notes.size()) {
-                System.out.println("Invalid choice.");
-                return;
+                if (choice >= 1 && choice <= notes.size()) {
+                    break; // exit of the loop
+                } else {
+                    System.out.println("Invalid choice. Please enter a valid note number.");
+                }
             }
-
             DoctorsNote selectedNote = notes.get(choice - 1);
 
             System.out.println("Current Comment: " + selectedNote.getNotes());

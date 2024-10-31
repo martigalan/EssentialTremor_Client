@@ -1,6 +1,7 @@
 package pojos;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Patient {
     private String name;

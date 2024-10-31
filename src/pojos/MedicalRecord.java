@@ -3,6 +3,7 @@ package pojos;
 import data.ACC;
 import data.EMG;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalRecord {
@@ -109,6 +110,21 @@ public class MedicalRecord {
         this.weight = weight;
         this.height = height;
         this.symptoms = symptoms;
+        this.doctors = new ArrayList<>();
+        this.doctorsNotes = new ArrayList<>();
+    }
+    public MedicalRecord(String patientName, String patientSurname, int age, double weight, int height, List<String> symptoms, ACC acceleration, EMG emg, Boolean genetic_background) {
+        this.patientName = patientName;
+        this.patientSurname = patientSurname;
+        this.age = age;
+        this.weight = weight;
+        this.height = height;
+        this.symptoms = symptoms;
+        this.acceleration = acceleration;
+        this.emg = emg;
+        this.genetic_background = genetic_background;
+        this.doctors = new ArrayList<>();
+        this.doctorsNotes = new ArrayList<>();
     }
 
     @Override

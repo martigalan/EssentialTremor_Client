@@ -1,9 +1,17 @@
 package pojos;
 
+import data.ACC;
+import data.EMG;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Doctor {
 
@@ -19,13 +27,17 @@ public class Doctor {
         this.name = name;
         this.surname = surname;
         this.patients = patients;
+        this.medicalRecords = new ArrayList<>();
+        this.doctorsNotes = new ArrayList<>();
+        this.patients = new ArrayList<>();
     }
+
 
     @Override
     public String toString() {
         return "Doctor{" +
                 "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
+                ", surname='" + surname + '\''+
                 '}';
     }
 
@@ -95,24 +107,99 @@ public class Doctor {
         return listOfPatients.get(number - 1);
     }
 
-    private MedicalRecord receiveMedicalRecord() {
-        //TODO with sockets, ONLY receive the record and build a new one from the single parameters
-        //MedicalRecord medicalRecord = new MedicalRecord(...);
-        //this.getMedicalRecords().add(medicalRecord);
-        //medicalRecord().getDoctors().add(this);
-        //DoctorsNote doctorsNote = createDoctorsNote(medicalRecord);
-        //medicalRecord.getDoctorsNotes().add(doctorsNote);
-        return null;
+    private MedicalRecord receiveMedicalRecord() throws IOException {
+        MedicalRecord medicalRecord = null;
+        try (ServerSocket serverSocket = new ServerSocket(9000)) {  // Puerto 9000 para coincidir con el cliente
+            System.out.println("Server started, waiting for client...");
+
+            try (Socket socket = serverSocket.accept();
+                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
+                System.out.println("Client connected. Receiving data...");
+
+                // Read each line
+                String patientName = bufferedReader.readLine();
+                //System.out.println(patientName);
+                String patientSurname = bufferedReader.readLine();
+                //System.out.println(patientSurname);
+                int age = Integer.parseInt(bufferedReader.readLine());
+                //System.out.println(age);
+                double weight = Double.parseDouble(bufferedReader.readLine());
+                //System.out.println(weight);
+                int height = Integer.parseInt(bufferedReader.readLine());
+                //System.out.println(height);
+                // Symptoms
+                String symptoms = bufferedReader.readLine();
+                //System.out.println(symptoms);
+                List<String> listSymptoms = splitToStringList(symptoms);
+                // time, acc and emg
+                String time = bufferedReader.readLine();
+                //System.out.println(time);
+                List<Integer> listTime = splitToIntegerList(time);
+                String acc = bufferedReader.readLine();
+                //System.out.println(acc);
+                List<Integer> listAcc = splitToIntegerList(acc);
+                String emg = bufferedReader.readLine();
+                //System.out.println(emg);
+                List<Integer> listEmg = splitToIntegerList(emg);
+                // genBack
+                Boolean geneticBackground = Boolean.parseBoolean(bufferedReader.readLine());
+                //System.out.println(geneticBackground);
+
+                releaseResources(bufferedReader, socket, serverSocket);
+
+                ACC acc1 = new ACC(listAcc, listTime);
+                EMG emg1 = new EMG(listEmg, listTime);
+                medicalRecord = new MedicalRecord(patientName, patientSurname,age, weight, height, listSymptoms, acc1, emg1, geneticBackground);
+                this.getMedicalRecords().add(medicalRecord);
+                medicalRecord.getDoctors().add(this);
+                //TODO this is in the main
+                //DoctorsNote doctorsNote = createDoctorsNote(medicalRecord);
+                //medicalRecord.getDoctorsNotes().add(doctorsNote);
+                return medicalRecord;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return medicalRecord;
     }
 
-    private void showInfoMedicalRecord(MedicalRecord medicalRecord) {
-        //TODO show info, graphs and everything
+    public static List<String> splitToStringList(String str) {
+        return Arrays.asList(str.split(","));
+    }
+    public static List<Integer> splitToIntegerList(String str) {
+        return Arrays.stream(str.split(","))
+                .filter(s -> s.matches("-?\\d+"))  // Solo permite números enteros (positivos o negativos)
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
+
+    private static void releaseResources(BufferedReader bufferedReader,
+                                         Socket socket, ServerSocket socketServidor) {
+        try {
+            bufferedReader.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            socketServidor.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void showInfoMedicalRecord(MedicalRecord medicalRecord){
         System.out.println(medicalRecord);
         medicalRecord.showAcc();
         medicalRecord.showEMG();
     }
-
-    private DoctorsNote createDoctorsNote(MedicalRecord medicalRecord) {
+    private DoctorsNote createDoctorsNote(MedicalRecord medicalRecord){
         //create a note for the medical record
         Scanner sc = new Scanner(System.in);
         System.out.println("\n Write any comments about the medical record (No enters): ");
@@ -171,11 +258,10 @@ public class Doctor {
         sc.close();
     }
 
-    private void sendDoctorsNote (DoctorsNote doctorsNote){
+    private void sendDoctorsNote(DoctorsNote doctorsNote){
         //TODO, send info to server
     }
-
-    private void addPatient () {
+    private void addPatient(){
         Scanner sc = new Scanner(System.in);
         System.out.println("- Name: ");
         String name = sc.nextLine();
@@ -197,10 +283,17 @@ public class Doctor {
                 System.out.println("---NOT A VALID INPUT, PLEASE TRY AGAIN...");
             }
         }
-        Patient patient = new Patient(name, surname, genBack);
+        Patient patient = new Patient(name,surname,genBack);
         patient.getDoctors().add(this);
         this.getPatients().add(patient);
         sc.close();
     }
-}
 
+
+    public static void main(String[] args) throws IOException {
+        List<Patient> list = null;
+        Doctor d = new Doctor("a","a",list);
+
+        d.receiveMedicalRecord();
+    }
+}

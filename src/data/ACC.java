@@ -1,9 +1,5 @@
 package data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,6 +8,9 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ACC {
         private List<Integer> signalData;
@@ -25,6 +24,12 @@ public class ACC {
             this.path = path;
             this.timestamp = timestamp;
         }
+
+
+    public ACC(List<Integer> signalData, List<Integer> timestamp) {
+        this.signalData = signalData;
+        this.timestamp = timestamp;
+    }
 
     public ACC() {
         this.signalData = new ArrayList<>();

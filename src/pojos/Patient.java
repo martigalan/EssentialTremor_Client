@@ -9,6 +9,9 @@ import data.Data;
 import data.EMG;
 
 import javax.bluetooth.RemoteDevice;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -193,9 +196,53 @@ public class Patient {
         return new MedicalRecord(age, weight, height, symptoms);
     }
 
-    private void sendMedicalRecord(MedicalRecord medicalRecord){
-        //TODO send info
+    private MedicalRecord chooseMR(){ //TODO choose
+        MedicalRecord mr = this.getMedicalRecords().get(0);
+        return mr;
     }
+    private void sendMedicalRecord(MedicalRecord medicalRecord) throws IOException {
+        //TODO send info
+        Socket socket = new Socket("localhost", 9000);
+        PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println("Connection established... sending text");
+        printWriter.println(medicalRecord.getPatientName());
+        printWriter.println(medicalRecord.getPatientSurname());
+        printWriter.println(medicalRecord.getAge());//int
+        printWriter.println(medicalRecord.getWeight());//double
+        printWriter.println(medicalRecord.getHeight());//int
+        //symptoms
+        String symptoms = joinWithCommas(medicalRecord.getSymptoms());
+        System.out.println(symptoms);
+        //timestamp
+        String time = joinIntegersWithCommas(medicalRecord.getAcceleration().getTimestamp());
+        printWriter.println(time);
+        //acc
+        String acc = joinIntegersWithCommas(medicalRecord.getAcceleration().getSignalData());
+        printWriter.println(acc);
+        //emg
+        String emg = joinIntegersWithCommas(medicalRecord.getEmg().getSignalData());
+        printWriter.println(emg);
+        printWriter.println(medicalRecord.getGenetic_background());//boolean
+        releaseResources(printWriter, socket);
+    }
+    public static String joinWithCommas(List<String> list) {
+        return String.join(",", list);
+    }
+    public static String joinIntegersWithCommas(List<Integer> list) {
+        return list.stream()
+                .map(String::valueOf) // Convierte cada Integer a String
+                .collect(Collectors.joining(","));
+    }
+    private static void releaseResources(PrintWriter printWriter, Socket socket) {
+        printWriter.close();
+
+        try {
+            socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private DoctorsNote receiveDoctorsNote(){
         //TODO receive info
         return null;
@@ -203,12 +250,13 @@ public class Patient {
     private void seeDoctorsNotes() {
         //TODO here the patient chooses what record they want to see
     }
-
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         Patient p = new Patient("a", "a", Boolean.TRUE);
         p.openRecord();
-        for (int i=0; i<p.getMedicalRecords().size();i++){
+        /*for (int i=0; i<p.getMedicalRecords().size();i++){
             System.out.println(p.getMedicalRecords().get(i));
-        }
+        }*/
+        MedicalRecord mr = p.chooseMR();
+        p.sendMedicalRecord(mr);
     }
 }

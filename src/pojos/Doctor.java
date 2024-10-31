@@ -240,12 +240,12 @@ public class Doctor {
 
         int choice = -1;
         while (true) {
-            System.out.println("--- Choose a note to edit by number: ");
+            System.out.println("---> Choose a note to edit by number: ");
             choice = sc.nextInt();
             sc.nextLine(); // Consume newline
 
             if (choice >= 1 && choice <= notes.size()) {
-                break; // Valid choice, exit the loop
+                break; // exit of the loop
             } else {
                 System.out.println("Invalid choice. Please enter a valid note number.");
             }

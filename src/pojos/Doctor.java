@@ -6,6 +6,7 @@ import data.EMG;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -29,9 +30,15 @@ public class Doctor {
         this.patients = patients;
         this.medicalRecords = new ArrayList<>();
         this.doctorsNotes = new ArrayList<>();
-        this.patients = new ArrayList<>();
     }
 
+    public Doctor(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+        this.patients = new ArrayList<>();
+        this.medicalRecords = new ArrayList<>();
+        this.doctorsNotes = new ArrayList<>();
+    }
 
     @Override
     public String toString() {
@@ -146,7 +153,7 @@ public class Doctor {
                 Boolean geneticBackground = Boolean.parseBoolean(bufferedReader.readLine());
                 //System.out.println(geneticBackground);
 
-                releaseResources(bufferedReader, socket, serverSocket);
+                releaseReceivingResources(bufferedReader, socket, serverSocket);
 
                 ACC acc1 = new ACC(listAcc, listTime);
                 EMG emg1 = new EMG(listEmg, listTime);
@@ -174,8 +181,8 @@ public class Doctor {
                 .collect(Collectors.toList());
     }
 
-    private static void releaseResources(BufferedReader bufferedReader,
-                                         Socket socket, ServerSocket socketServidor) {
+    private static void releaseReceivingResources(BufferedReader bufferedReader,
+                                                  Socket socket, ServerSocket socketServidor) {
         try {
             bufferedReader.close();
         } catch (IOException ex) {
@@ -262,8 +269,24 @@ public class Doctor {
         sc.close();
     }
 
-    private void sendDoctorsNote(DoctorsNote doctorsNote){
+    private void sendDoctorsNote(DoctorsNote doctorsNote) throws IOException {
         //TODO, send info to server
+        Socket socket = new Socket("localhost", 9009);
+        PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println("Connection established... sending text");
+        printWriter.println(getName());
+        printWriter.println(getSurname());
+        printWriter.println(doctorsNote.getNotes());
+        releaseSendingResources(printWriter, socket);
+    }
+    private static void releaseSendingResources(PrintWriter printWriter, Socket socket) {
+        printWriter.close();
+
+        try {
+            socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     private void addPatient(){
         Scanner sc = new Scanner(System.in);

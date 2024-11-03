@@ -9,12 +9,14 @@ import data.Data;
 import data.EMG;
 
 import javax.bluetooth.RemoteDevice;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -163,6 +165,7 @@ public class Patient {
             System.out.println(emg.getSignalData());
             System.out.println(acc.getSignalData());*/
             data = new Data(acc, emg);
+            saveDataToFile(this.getName(), acc, emg); //save info in a txt file
 
         } catch (BITalinoException ex) {
             Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
@@ -179,6 +182,39 @@ public class Patient {
             }
         }
         return data;
+    }
+
+    private void saveDataToFile(String patientName, ACC acc, EMG emg) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        String timestamp = now.format(formatter);
+
+        Path folderPath = Paths.get("BITalinoData");
+        try {
+            Files.createDirectories(folderPath);
+        } catch (IOException e) {
+            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, "Error creating directory", e);
+        }
+
+        String fileName = "BITalinoData/" + patientName + "_" + timestamp + ".txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write("Patient Name: " + patientName + "\n");
+            writer.write("Date and Time: " + now + "\n\n");
+
+            writer.write("EMG Data:\n");
+            for (int i = 0; i < emg.getSignalData().size(); i++) {
+                writer.write("Time: " + emg.getTimestamp().get(i) + ", Signal: " + emg.getSignalData().get(i) + "\n");
+            }
+
+            writer.write("\nACC Data:\n");
+            for (int i = 0; i < acc.getSignalData().size(); i++) {
+                writer.write("Time: " + acc.getTimestamp().get(i) + ", Signal: " + acc.getSignalData().get(i) + "\n");
+            }
+
+            System.out.println("Data saved to " + fileName);
+        } catch (IOException e) {
+            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, "Error writing file", e);
+        }
     }
 
     private MedicalRecord askData() {

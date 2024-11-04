@@ -242,7 +242,7 @@ public class Patient {
         MedicalRecord mr = this.getMedicalRecords().get(0);
         return mr;
     }
-    private void sendMedicalRecord(MedicalRecord medicalRecord, Socket socket) throws IOException {
+    public void sendMedicalRecord(MedicalRecord medicalRecord, Socket socket) throws IOException {
         //TODO send info, CHECK
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connection established... sending text");
@@ -266,15 +266,16 @@ public class Patient {
         printWriter.println(medicalRecord.getGenetic_background());//boolean
         //releaseSendingResources(printWriter, socket);
     }
+
     public static String joinWithCommas(List<String> list) {
         return String.join(",", list);
     }
+
     public static String joinIntegersWithCommas(List<Integer> list) {
         return list.stream()
                 .map(String::valueOf) // Convert Integer to String
                 .collect(Collectors.joining(","));
     }
-
 
     private DoctorsNote receiveDoctorsNote()throws IOException {
         //TODO check this one

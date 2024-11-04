@@ -114,60 +114,34 @@ public class Doctor {
         return listOfPatients.get(number - 1);
     }
 
-    private MedicalRecord receiveMedicalRecord() throws IOException {
+    public MedicalRecord receiveMedicalRecord(Socket socket, BufferedReader bufferedReader) throws IOException {
         MedicalRecord medicalRecord = null;
-        try (ServerSocket serverSocket = new ServerSocket(9000)) {  // Puerto 9000 para coincidir con el cliente
-            System.out.println("Server started, waiting for client...");
+        System.out.println("Client connected. Receiving data...");
 
-            try (Socket socket = serverSocket.accept();
-                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+        // Read each line
+        String patientName = bufferedReader.readLine();
+        String patientSurname = bufferedReader.readLine();
+        int age = Integer.parseInt(bufferedReader.readLine());
+        double weight = Double.parseDouble(bufferedReader.readLine());
+        int height = Integer.parseInt(bufferedReader.readLine());
+        // Symptoms
+        String symptoms = bufferedReader.readLine();
+        List<String> listSymptoms = splitToStringList(symptoms);
+        // time, acc and emg
+        String time = bufferedReader.readLine();
+        List<Integer> listTime = splitToIntegerList(time);
+        String acc = bufferedReader.readLine();
+        List<Integer> listAcc = splitToIntegerList(acc);
+        String emg = bufferedReader.readLine();
+        List<Integer> listEmg = splitToIntegerList(emg);
+        // genBack
+        boolean geneticBackground = Boolean.parseBoolean(bufferedReader.readLine());
 
-                System.out.println("Client connected. Receiving data...");
-
-                // Read each line
-                String patientName = bufferedReader.readLine();
-                //System.out.println(patientName);
-                String patientSurname = bufferedReader.readLine();
-                //System.out.println(patientSurname);
-                int age = Integer.parseInt(bufferedReader.readLine());
-                //System.out.println(age);
-                double weight = Double.parseDouble(bufferedReader.readLine());
-                //System.out.println(weight);
-                int height = Integer.parseInt(bufferedReader.readLine());
-                //System.out.println(height);
-                // Symptoms
-                String symptoms = bufferedReader.readLine();
-                //System.out.println(symptoms);
-                List<String> listSymptoms = splitToStringList(symptoms);
-                // time, acc and emg
-                String time = bufferedReader.readLine();
-                //System.out.println(time);
-                List<Integer> listTime = splitToIntegerList(time);
-                String acc = bufferedReader.readLine();
-                //System.out.println(acc);
-                List<Integer> listAcc = splitToIntegerList(acc);
-                String emg = bufferedReader.readLine();
-                //System.out.println(emg);
-                List<Integer> listEmg = splitToIntegerList(emg);
-                // genBack
-                Boolean geneticBackground = Boolean.parseBoolean(bufferedReader.readLine());
-                //System.out.println(geneticBackground);
-
-                releaseReceivingResources(bufferedReader, socket, serverSocket);
-
-                ACC acc1 = new ACC(listAcc, listTime);
-                EMG emg1 = new EMG(listEmg, listTime);
-                medicalRecord = new MedicalRecord(patientName, patientSurname,age, weight, height, listSymptoms, acc1, emg1, geneticBackground);
-                this.getMedicalRecords().add(medicalRecord);
-                medicalRecord.getDoctors().add(this);
-                //TODO this is in the main
-                //DoctorsNote doctorsNote = createDoctorsNote(medicalRecord);
-                //medicalRecord.getDoctorsNotes().add(doctorsNote);
-                return medicalRecord;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ACC acc1 = new ACC(listAcc, listTime);
+        EMG emg1 = new EMG(listEmg, listTime);
+        medicalRecord = new MedicalRecord(patientName, patientSurname, age, weight, height, listSymptoms, acc1, emg1, geneticBackground);
+        this.getMedicalRecords().add(medicalRecord);
+        medicalRecord.getDoctors().add(this);
         return medicalRecord;
     }
 
@@ -181,26 +155,6 @@ public class Doctor {
                 .collect(Collectors.toList());
     }
 
-    private static void releaseReceivingResources(BufferedReader bufferedReader,
-                                                  Socket socket, ServerSocket socketServidor) {
-        try {
-            bufferedReader.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            socket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            socketServidor.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     private void showInfoMedicalRecord(MedicalRecord medicalRecord){
         System.out.println(medicalRecord);
         medicalRecord.showAcc();
@@ -269,25 +223,13 @@ public class Doctor {
         sc.close();
     }
 
-    private void sendDoctorsNote(DoctorsNote doctorsNote) throws IOException {
-        //TODO, send info to server
-        Socket socket = new Socket("localhost", 9009);
-        PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-        System.out.println("Connection established... sending text");
+    public void sendDoctorsNote(DoctorsNote doctorsNote, Socket socket,PrintWriter printWriter) throws IOException {
+        System.out.println("Sending text");
         printWriter.println(getName());
         printWriter.println(getSurname());
         printWriter.println(doctorsNote.getNotes());
-        releaseSendingResources(printWriter, socket);
     }
-    private static void releaseSendingResources(PrintWriter printWriter, Socket socket) {
-        printWriter.close();
 
-        try {
-            socket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     private void addPatient(){
         Scanner sc = new Scanner(System.in);
         System.out.println("- Name: ");
@@ -317,10 +259,10 @@ public class Doctor {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
         List<Patient> list = null;
         Doctor d = new Doctor("a","a",list);
 
         d.receiveMedicalRecord();
-    }
+    }*/
 }

@@ -30,6 +30,9 @@ public class Patient {
     private List<MedicalRecord> medicalRecords;
     private List<Doctor> doctors;
 
+    public Patient() {
+    }
+
     public Patient(String name, String surname, Boolean genBack) {
         this.name = name;
         this.surname = surname;
@@ -239,9 +242,8 @@ public class Patient {
         MedicalRecord mr = this.getMedicalRecords().get(0);
         return mr;
     }
-    private void sendMedicalRecord(MedicalRecord medicalRecord) throws IOException {
-        //TODO send info
-        Socket socket = new Socket("localhost", 9000);
+    private void sendMedicalRecord(MedicalRecord medicalRecord, Socket socket) throws IOException {
+        //TODO send info, CHECK
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connection established... sending text");
         printWriter.println(medicalRecord.getPatientName());
@@ -262,7 +264,7 @@ public class Patient {
         String emg = joinIntegersWithCommas(medicalRecord.getEmg().getSignalData());
         printWriter.println(emg);
         printWriter.println(medicalRecord.getGenetic_background());//boolean
-        releaseSendingResources(printWriter, socket);
+        //releaseSendingResources(printWriter, socket);
     }
     public static String joinWithCommas(List<String> list) {
         return String.join(",", list);
@@ -272,17 +274,10 @@ public class Patient {
                 .map(String::valueOf) // Convert Integer to String
                 .collect(Collectors.joining(","));
     }
-    private static void releaseSendingResources(PrintWriter printWriter, Socket socket) {
-        printWriter.close();
 
-        try {
-            socket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     private DoctorsNote receiveDoctorsNote()throws IOException {
+        //TODO check this one
         DoctorsNote doctorsNote = null;
         try (ServerSocket serverSocket = new ServerSocket(9009)) {  // Puerto 9009 para coincidir con el cliente
             System.out.println("Server started, waiting for client...");
@@ -338,13 +333,13 @@ public class Patient {
         //TODO here the patient chooses what record they want to see
 
     }
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
         Patient p = new Patient("a", "a", Boolean.TRUE);
         p.openRecord();
         /*for (int i=0; i<p.getMedicalRecords().size();i++){
             System.out.println(p.getMedicalRecords().get(i));
-        }*/
+        }
         MedicalRecord mr = p.chooseMR();
         p.sendMedicalRecord(mr);
-    }
+    }*/
 }

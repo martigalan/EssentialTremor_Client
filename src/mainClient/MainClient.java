@@ -27,11 +27,6 @@ public class MainClient {
             inputStream = socket.getInputStream();
             boolean connection = true;
 
-            /*if (!login()) {
-                System.out.println("Login failed. Exiting.");
-                return;
-            }*/
-
             registerPatient();
 
             try {
@@ -99,39 +94,49 @@ public class MainClient {
         }
     }
 
-    //TODO revisar este con el del server
-    public static boolean login() throws IOException {
-        System.out.print("Username: ");
-        String username = sc.nextLine();
-        System.out.print("Password: ");
-        String password = sc.nextLine();
-
-        printWriter.println("LOGIN|" + username + "|" + password);
-        String response = bufferedReader.readLine();
-
-        if ("LOGIN_SUCCESS".equals(response)) {
-            System.out.println("Login successful.");
-            return true;
-        } else {
-            System.out.println("Login failed.");
-            return false;
-        }
-    }
-
     public static void registerPatient() throws IOException {
         System.out.println("Please enter patient details:");
-        System.out.print("\nName: ");
-        String name = sc.nextLine();
-        System.out.print("\nSurname: ");
-        String surname = sc.nextLine();
-        System.out.print("\nGenetic Background (true/false): ");
-        boolean geneticBackground = sc.nextBoolean();
-        sc.nextLine();
-        String patientData = name + "|" + surname + "|" + geneticBackground;
+        String name = "";
+        String surname = "";
+        boolean geneticBackground = false;
+        while (true) {
+            System.out.print("Name: ");
+            name = sc.nextLine().trim();
+            if (!name.isEmpty()) {
+                break;
+            } else {
+                System.out.println("Invalid name. Please enter a valid name.");
+            }
+        }
+        while (true) {
+            System.out.print("Surname: ");
+            surname = sc.nextLine().trim();
+            if (!surname.isEmpty()) {
+                break;
+            } else {
+                System.out.println("Invalid surname. Please enter a valid surname.");
+            }
+        }
+        while (true) {
+            System.out.print("Genetic Background (true/false): ");
+            String input = sc.nextLine().trim().toLowerCase();
+            if (input.equals("true")) {
+                geneticBackground = true;
+                break;
+            } else if (input.equals("false")) {
+                geneticBackground = false;
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter 'true' or 'false'.");
+            }
+        }
 
+        String patientData = name + "|" + surname + "|" + geneticBackground;
         printWriter.println(patientData);
         System.out.println("Patient data sent to the server for registration.");
     }
+
+
 
     private static void openMedicalRecord() {
         // TODO

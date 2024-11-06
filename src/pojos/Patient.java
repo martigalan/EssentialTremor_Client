@@ -23,19 +23,38 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Patient {
+
+    /**
+     * Patients name
+     */
     private String name;
+    /**
+     * Patients surname
+     */
     private String surname;
+    /**
+     * Boolean to identify if the patient has a genetic predisposition of essential tremor
+     * TRUE if there is, FALSE if not
+     */
     private Boolean genetic_background;
+    /**
+     * User to store username and password for the application
+     */
     private User user;
+    /**
+     * A list of all the medical records the patient has
+     */
     private List<MedicalRecord> medicalRecords;
+    /**
+     * A list of the doctors that the patient has
+     */
     private List<Doctor> doctors;
 
-    public Patient() {
-    }
 
     /**
      * Constructor
-     * @param name patients name
+     *
+     * @param name    patients name
      * @param surname patients surname
      * @param genBack patient genetic background of essential tremor
      */
@@ -93,20 +112,21 @@ public class Patient {
 
     /**
      * Patients String representation
+     *
      * @return String representation
      */
     @Override
     public String toString() {
         return "- Name: " + name + '\'' +
                 "- Surname: " + surname + '\'';
-                //"- State: " + state +
-                //"- Treatment: " + treatment;
+        //"- State: " + state +
+        //"- Treatment: " + treatment;
     }
 
     /**
      * Creates a medical record calling other auxiliar functions
      */
-    private void openRecord(){
+    public void openRecord() {
         MedicalRecord record = askData();
         record.setPatientName(this.name);
         record.setPatientSurname(this.surname);
@@ -119,9 +139,10 @@ public class Patient {
 
     /**
      * Function to record EMG and ACC signals with Bitalino
+     *
      * @return Data, a set of emg and acc recorded data
      */
-    private Data obtainData(){
+    private Data obtainData() {
         Frame[] frame;
         Data data = null;
         BITalino bitalino = null;
@@ -153,7 +174,7 @@ public class Patient {
             for (int j = 0; j < 100; j++) {
 
                 //Each time read a block of 10 samples
-                int block_size=10;
+                int block_size = 10;
                 frame = bitalino.read(block_size);
 
                 System.out.println("size block: " + frame.length);
@@ -206,9 +227,10 @@ public class Patient {
 
     /**
      * Saves the acc and emg data to a txt file for the user
+     *
      * @param patientName name of the patient
-     * @param acc an array of acc values
-     * @param emg and array of emg values
+     * @param acc         an array of acc values
+     * @param emg         and array of emg values
      */
     private void saveDataToFile(String patientName, ACC acc, EMG emg) {
         LocalDateTime now = LocalDateTime.now();
@@ -245,6 +267,7 @@ public class Patient {
 
     /**
      * Asks the user to input additional data for the medical record: age, weight, height and symptoms.
+     *
      * @return a partially-complete Medical Record
      */
     private MedicalRecord askData() {
@@ -267,17 +290,20 @@ public class Patient {
 
     /**
      * Chooses the medical record to send
+     *
      * @return the last Medical Record of the patients list
      */
-    private MedicalRecord chooseMR(){ //TODO choose
-        MedicalRecord mr = this.getMedicalRecords().get(0);
+    public MedicalRecord chooseMR() { //TODO choose
+        int size = this.getMedicalRecords().size();
+        MedicalRecord mr = this.getMedicalRecords().get(size - 1);
         return mr;
     }
 
     /**
      * Send the Medical Record to the server for the doctor to see
+     *
      * @param medicalRecord complete Medical Record
-     * @param socket Socket with the connection to the server
+     * @param socket        Socket with the connection to the server
      * @throws IOException in case the connection fails
      */
     public void sendMedicalRecord(MedicalRecord medicalRecord, Socket socket) throws IOException {
@@ -306,6 +332,7 @@ public class Patient {
 
     /**
      * Creates a String from a List
+     *
      * @param list list of Strings
      * @return String with items of the list separated with commas
      */
@@ -315,6 +342,7 @@ public class Patient {
 
     /**
      * Creates a String with the integer values of a List
+     *
      * @param list list of Integers
      * @return String with the integer values separated with commas
      */
@@ -326,10 +354,11 @@ public class Patient {
 
     /**
      * Gets the doctors note about the medical record that was previously sent
+     *
      * @return DoctorsNote containing the evaluation
      * @throws IOException in case connection fails
      */
-    private DoctorsNote receiveDoctorsNote()throws IOException {
+    private DoctorsNote receiveDoctorsNote() throws IOException {
         //TODO check this one
         DoctorsNote doctorsNote = null;
         try (ServerSocket serverSocket = new ServerSocket(9009)) {  // Puerto 9009 para coincidir con el cliente
@@ -365,8 +394,9 @@ public class Patient {
 
     /**
      * Realeases the resources that were used
+     *
      * @param bufferedReader used to read
-     * @param socket connection with the server
+     * @param socket         connection with the server
      * @param socketServidor server socket
      */
     private static void releaseReceivingResources(BufferedReader bufferedReader,
@@ -391,19 +421,10 @@ public class Patient {
     }
 
     /**
-     * Displays the DoctorsNote
+     * Displays the DoctorsNote sent by the doctor
      */
     private void seeDoctorsNotes() {
         //TODO here the patient chooses what record they want to see
 
     }
-    /*public static void main(String[] args) throws IOException {
-        Patient p = new Patient("a", "a", Boolean.TRUE);
-        p.openRecord();
-        /*for (int i=0; i<p.getMedicalRecords().size();i++){
-            System.out.println(p.getMedicalRecords().get(i));
-        }
-        MedicalRecord mr = p.chooseMR();
-        p.sendMedicalRecord(mr);
-    }*/
 }

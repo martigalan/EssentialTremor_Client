@@ -1,9 +1,12 @@
 package mainClient;
 
+import pojos.MedicalRecord;
 import pojos.Patient;
+import pojos.User;
 
 import java.io.*;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -30,38 +33,29 @@ public class MainClient {
             //1º menú register/login
             //2º si quiere register, le manda al server que es patient y sus datos
             //3º si quiere login, coger de la bbdd del server el username y password y devuelvo TRUE o FALSE
-            //TODO waiting until register
-            registerPatient();
 
+            int option;
             try {
                 control = true;
                 while (control) {
-                    System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    System.out.println("@@                                                                  @@");
-                    System.out.println("@@                 Welcome.                                         @@");
-                    System.out.println("@@                 1. Open Medical Record                           @@");
-                    System.out.println("@@                 2. Send Medical Record                           @@");
-                    System.out.println("@@                 0. Exit                                          @@");
-                    System.out.println("@@                                                                  @@");
-                    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    System.out.print("\nSelect an option: ");
+                    printLoginMenu();
 
                     try {
                         option = sc.nextInt();
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid input. Please enter a number.");
-                        sc.next();
-                        continue;
+                        sc.next(); // Clear the invalid input
+                        continue; // Restart the loop
                     }
                     switch (option) {
                         case 1:
-                            openMedicalRecord();
+                            registerPatient();
                             break;
                         case 2:
-                            sendMedicalRecord();
+                            login();
                             break;
                         case 0:
-                            connection = false;
+                            //conexion = false;
                             control = false;
                             break;
                         default:
@@ -69,6 +63,7 @@ public class MainClient {
                             break;
                     }
                 }
+
 
             } catch (NumberFormatException e) {
                 System.out.println("  NOT A NUMBER. Closing application... \n");
@@ -84,6 +79,78 @@ public class MainClient {
 
     }
 
+    public static void login() throws IOException {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Username: ");
+        String username = sc.nextLine();
+        System.out.print("Password: ");
+        String password = sc.nextLine();
+        String patientData = username + "|" + password;
+        printWriter.println(patientData);
+        System.out.println("User data sent to the server for login.");
+
+        //TODO comprobar q existe
+        //TODO cuando existe
+        //devolver datos paciente en la bbdd y inicializar
+        //patient = new Patient(...);
+        menuUser();
+    }
+
+    public static void menuUser(){
+        try {
+            control = true;
+            while (control) {
+                System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                System.out.println("@@                                                                  @@");
+                System.out.println("@@                 Welcome.                                         @@");
+                System.out.println("@@                 1. Open Medical Record                           @@");
+                System.out.println("@@                 2. Send Medical Record                           @@");
+                System.out.println("@@                 0. Exit                                          @@");
+                System.out.println("@@                                                                  @@");
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                System.out.print("\nSelect an option: ");
+
+                try {
+                    option = sc.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    sc.next();
+                    continue;
+                }
+                switch (option) {
+                    case 1:
+                        openMedicalRecord();
+                        break;
+                    case 2:
+                        sendMedicalRecord();
+                        break;
+                    case 0:
+                        control = false;
+                        break;
+                    default:
+                        System.out.println("  NOT AN OPTION \n");
+                        break;
+                }
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("  NOT A NUMBER. Closing application... \n");
+            sc.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void printLoginMenu(){
+        System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("@@                                                                  @@");
+        System.out.println("@@                 Welcome.                                         @@");
+        System.out.println("@@                 1. Register                                      @@");
+        System.out.println("@@                 2. Login                                         @@");
+        System.out.println("@@                 0. Exit                                          @@");
+        System.out.println("@@                                                                  @@");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.print("\nSelect an option: ");
+    }
     private static void releaseResourcesClient(InputStream inputStream, Socket socket) {
         try {
             inputStream.close();
@@ -138,19 +205,28 @@ public class MainClient {
         String patientData = name + "|" + surname + "|" + geneticBackground;
         printWriter.println(patientData);
         System.out.println("Patient data sent to the server for registration.");
+        patient = new Patient(name, surname, geneticBackground);
     }
 
 
 
     private static void openMedicalRecord() {
-        // TODO
+        patient.openRecord();
         System.out.println("Opening medical record...");
+        MedicalRecord mr = (patient.chooseMR()); // TODO mirar esto luego
+        System.out.println(mr);
     }
 
-    private static void sendMedicalRecord() {
+    private static void sendMedicalRecord() throws IOException {
         // TODO
+        MedicalRecord mr = (patient.chooseMR());
+        if (mr == null){
+            System.out.println("You don't have any medical records, create one first...");
+            return;
+        }
+
         System.out.println("Sending medical record...");
-        //patient.sendMedicalRecord(medicalRecord, socket);
+        patient.sendMedicalRecord(mr, socket);
     }
 }
 

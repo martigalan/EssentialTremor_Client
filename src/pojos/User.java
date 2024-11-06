@@ -4,17 +4,25 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
+    /**
+     * Identifier to serialize User
+     */
     private static final long serialVersionUID = 2L;
-    private int id;
+    /**
+     * Username to login into the application
+     */
     public String username;
+    /**
+     * Password to login into the application
+     */
     public byte[] password;
 
-    public User(int id) {
-        super();
-    }
-
-    public User(int id, String username, byte[] password) {
-        this.id=id;
+    /**
+     * Constructor
+     * @param username username identification
+     * @param password password identification
+     */
+    public User(String username, byte[] password) {
         this.username=username;
         this.password=password;
     }
@@ -34,17 +42,12 @@ public class User implements Serializable {
     public void setPassword(byte[] password) {
         this.password = password;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    /**
+     * String representation of User
+     * @return String to represent User
+     */
     @Override
     public String toString() {
-        return "User{" + "username=" + username + ", password=" + password + ", userId=" + id + '}';
+        return "User{" + "username=" + username + ", password=" + password;
     }
 }

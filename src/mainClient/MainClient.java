@@ -27,6 +27,10 @@ public class MainClient {
             inputStream = socket.getInputStream();
             boolean connection = true;
 
+            //1º menú register/login
+            //2º si quiere register, le manda al server que es patient y sus datos
+            //3º si quiere login, coger de la bbdd del server el username y password y devuelvo TRUE o FALSE
+            //TODO waiting until register
             registerPatient();
 
             try {

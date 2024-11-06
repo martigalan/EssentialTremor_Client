@@ -23,7 +23,12 @@ public class Doctor {
     private List<MedicalRecord> medicalRecords;
     private List<DoctorsNote> doctorsNotes;
 
-
+    /**
+     * Constructor
+     * @param name doctors name
+     * @param surname doctors surname
+     * @param patients list of patient associated with the doctor
+     */
     public Doctor(String name, String surname, List<Patient> patients) {
         this.name = name;
         this.surname = surname;
@@ -32,6 +37,11 @@ public class Doctor {
         this.doctorsNotes = new ArrayList<>();
     }
 
+    /**
+     * Constructor
+     * @param name doctors name
+     * @param surname doctors surname
+     */
     public Doctor(String name, String surname) {
         this.name = name;
         this.surname = surname;
@@ -40,6 +50,10 @@ public class Doctor {
         this.doctorsNotes = new ArrayList<>();
     }
 
+    /**
+     * Patients String representation
+     * @return String representation
+     */
     @Override
     public String toString() {
         return "Doctor{" +
@@ -101,6 +115,10 @@ public class Doctor {
         return patients;
     }
 
+    /**
+     * Chooses a patient from the doctors patients list
+     * @return Patient chosen
+     */
     private Patient choosePatient() {
         Scanner sc = new Scanner(System.in);
         List<Patient> listOfPatients = getPatients();
@@ -114,6 +132,13 @@ public class Doctor {
         return listOfPatients.get(number - 1);
     }
 
+    /**
+     *
+     * @param socket
+     * @param bufferedReader
+     * @return
+     * @throws IOException
+     */
     public MedicalRecord receiveMedicalRecord(Socket socket, BufferedReader bufferedReader) throws IOException {
         MedicalRecord medicalRecord = null;
         System.out.println("Client connected. Receiving data...");

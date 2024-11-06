@@ -33,6 +33,12 @@ public class Patient {
     public Patient() {
     }
 
+    /**
+     * Constructor
+     * @param name patients name
+     * @param surname patients surname
+     * @param genBack patient genetic background of essential tremor
+     */
     public Patient(String name, String surname, Boolean genBack) {
         this.name = name;
         this.surname = surname;
@@ -85,6 +91,10 @@ public class Patient {
         this.medicalRecords = medicalRecords;
     }
 
+    /**
+     * Patients String representation
+     * @return String representation
+     */
     @Override
     public String toString() {
         return "- Name: " + name + '\'' +
@@ -93,6 +103,9 @@ public class Patient {
                 //"- Treatment: " + treatment;
     }
 
+    /**
+     * Creates a medical record calling other auxiliar functions
+     */
     private void openRecord(){
         MedicalRecord record = askData();
         record.setPatientName(this.name);
@@ -104,6 +117,10 @@ public class Patient {
         this.getMedicalRecords().add(record);
     }
 
+    /**
+     * Function to record EMG and ACC signals with Bitalino
+     * @return Data, a set of emg and acc recorded data
+     */
     private Data obtainData(){
         Frame[] frame;
         Data data = null;
@@ -187,6 +204,12 @@ public class Patient {
         return data;
     }
 
+    /**
+     * Saves the acc and emg data to a txt file for the user
+     * @param patientName name of the patient
+     * @param acc an array of acc values
+     * @param emg and array of emg values
+     */
     private void saveDataToFile(String patientName, ACC acc, EMG emg) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
@@ -220,6 +243,10 @@ public class Patient {
         }
     }
 
+    /**
+     * Asks the user to input additional data for the medical record: age, weight, height and symptoms.
+     * @return a partially-complete Medical Record
+     */
     private MedicalRecord askData() {
         Scanner sc = new Scanner(System.in);
         System.out.println("- Age: ");
@@ -238,10 +265,21 @@ public class Patient {
         return new MedicalRecord(age, weight, height, symptoms);
     }
 
+    /**
+     * Chooses the medical record to send
+     * @return the last Medical Record of the patients list
+     */
     private MedicalRecord chooseMR(){ //TODO choose
         MedicalRecord mr = this.getMedicalRecords().get(0);
         return mr;
     }
+
+    /**
+     * Send the Medical Record to the server for the doctor to see
+     * @param medicalRecord complete Medical Record
+     * @param socket Socket with the connection to the server
+     * @throws IOException in case the connection fails
+     */
     public void sendMedicalRecord(MedicalRecord medicalRecord, Socket socket) throws IOException {
         //TODO send info, CHECK
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
@@ -264,19 +302,33 @@ public class Patient {
         String emg = joinIntegersWithCommas(medicalRecord.getEmg().getSignalData());
         printWriter.println(emg);
         printWriter.println(medicalRecord.getGenetic_background());//boolean
-        //releaseSendingResources(printWriter, socket);
     }
 
+    /**
+     * Creates a String from a List
+     * @param list list of Strings
+     * @return String with items of the list separated with commas
+     */
     public static String joinWithCommas(List<String> list) {
         return String.join(",", list);
     }
 
+    /**
+     * Creates a String with the integer values of a List
+     * @param list list of Integers
+     * @return String with the integer values separated with commas
+     */
     public static String joinIntegersWithCommas(List<Integer> list) {
         return list.stream()
                 .map(String::valueOf) // Convert Integer to String
                 .collect(Collectors.joining(","));
     }
 
+    /**
+     * Gets the doctors note about the medical record that was previously sent
+     * @return DoctorsNote containing the evaluation
+     * @throws IOException in case connection fails
+     */
     private DoctorsNote receiveDoctorsNote()throws IOException {
         //TODO check this one
         DoctorsNote doctorsNote = null;
@@ -310,6 +362,13 @@ public class Patient {
         }
         return doctorsNote;
     }
+
+    /**
+     * Realeases the resources that were used
+     * @param bufferedReader used to read
+     * @param socket connection with the server
+     * @param socketServidor server socket
+     */
     private static void releaseReceivingResources(BufferedReader bufferedReader,
                                                   Socket socket, ServerSocket socketServidor) {
         try {
@@ -330,6 +389,10 @@ public class Patient {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    /**
+     * Displays the DoctorsNote
+     */
     private void seeDoctorsNotes() {
         //TODO here the patient chooses what record they want to see
 

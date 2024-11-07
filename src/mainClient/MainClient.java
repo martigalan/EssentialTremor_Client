@@ -24,10 +24,11 @@ public class MainClient {
 
     public static void main(String[] args) {
         try {
+            // Parametrizable
             socket = new Socket("localhost", 9000);
             printWriter = new PrintWriter(socket.getOutputStream(), true);
-            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             inputStream = socket.getInputStream();
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             boolean connection = true;
 
             //1º menú register/login
@@ -204,6 +205,7 @@ public class MainClient {
 
         String patientData = name + "|" + surname + "|" + geneticBackground;
         printWriter.println(patientData);
+
         System.out.println("Patient data sent to the server for registration.");
         patient = new Patient(name, surname, geneticBackground);
     }

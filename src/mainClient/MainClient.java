@@ -122,6 +122,10 @@ public class MainClient {
         }
         String encryptedPassword = sb.toString();
 
+        //TODO
+        String command = "register";
+        printWriter.println(command);
+
         String patientData = name + "|" + surname + "|" + geneticBackground + "|" + username + "|" + encryptedPassword + "|patient";
         printWriter.println(patientData);  //Send to server
         System.out.println("Patient and user data sent to the server for registration.");
@@ -142,6 +146,10 @@ public class MainClient {
             sb.append(String.format("%02x", b));
         }
         String encryptedPassword = sb.toString();
+
+        //TODO
+        String command = "login";
+        printWriter.println(command);
 
         String loginData = username + "|" + encryptedPassword;
         printWriter.println(loginData);
@@ -244,12 +252,16 @@ public class MainClient {
     }
 
     private static void sendMedicalRecord() throws IOException {
-        // TODO
+
         MedicalRecord mr = (patient.chooseMR());
         if (mr == null){
             System.out.println("You don't have any medical records, create one first...");
             return;
         }
+
+        //TODO
+        String command = "login";
+        printWriter.println(command);
 
         System.out.println("Sending medical record...");
         patient.sendMedicalRecord(mr, socket);

@@ -358,7 +358,7 @@ public class Patient {
      * @return DoctorsNote containing the evaluation
      * @throws IOException in case connection fails
      */
-    private DoctorsNote receiveDoctorsNote() throws IOException {
+    private DoctorsNote receiveDoctorsNote()throws IOException {
         //TODO check this one
         DoctorsNote doctorsNote = null;
         try (ServerSocket serverSocket = new ServerSocket(9009)) {  // Puerto 9009 para coincidir con el cliente
@@ -376,10 +376,15 @@ public class Patient {
                 System.out.println(doctorSurname);
                 String notes = bufferedReader.readLine();
                 System.out.println(notes);
+                State st = State.valueOf(bufferedReader.readLine());
+                System.out.println(st);
+                Treatment trt = Treatment.valueOf(bufferedReader.readLine());
+                System.out.println(trt);
+
 
                 releaseReceivingResources(bufferedReader, socket, serverSocket);
 
-                doctorsNote = new DoctorsNote(doctorName, doctorSurname, notes);
+                doctorsNote = new DoctorsNote(doctorName, doctorSurname, notes, st, trt);
                 //TODO meter esto en lista doctor
                 //TODO this is in the main
                 //DoctorsNote doctorsNote = createDoctorsNote(medicalRecord);

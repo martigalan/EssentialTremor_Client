@@ -3,6 +3,7 @@ package pojos;
 import data.ACC;
 import data.EMG;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,18 @@ public class MedicalRecord {
      * List of doctors that receive this medical record
      */
     private List<Doctor> doctors;
+    /**
+     * Date of creation
+     */
+    private LocalDate date;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public List<Doctor> getDoctors() {
         return doctors;
@@ -139,6 +152,7 @@ public class MedicalRecord {
         return emg;
     }
 
+
     /**
      * Constructor
      * @param age patients age
@@ -153,6 +167,7 @@ public class MedicalRecord {
         this.symptoms = symptoms;
         this.doctors = new ArrayList<>();
         this.doctorsNotes = new ArrayList<>();
+        this.date = LocalDate.now();
     }
 
     /**
@@ -179,6 +194,7 @@ public class MedicalRecord {
         this.genetic_background = genetic_background;
         this.doctors = new ArrayList<>();
         this.doctorsNotes = new ArrayList<>();
+        this.date = LocalDate.now();
     }
 
     /**

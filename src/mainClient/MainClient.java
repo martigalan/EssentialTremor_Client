@@ -1,14 +1,13 @@
 package mainClient;
 
-import pojos.MedicalRecord;
-import pojos.Patient;
-import pojos.User;
+import pojos.*;
 
 import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -122,13 +121,20 @@ public class MainClient {
         }
         String encryptedPassword = sb.toString();
 
-        //TODO
         String command = "register";
         printWriter.println(command);
 
         String patientData = name + "|" + surname + "|" + geneticBackground + "|" + username + "|" + encryptedPassword + "|patient";
         printWriter.println(patientData);  //Send to server
         System.out.println("Patient and user data sent to the server for registration.");
+        String approval = bufferedReader.readLine();
+        if (approval.equals("REGISTER_SUCCESS")) {
+            System.out.println("Pateint registered correctly.");
+            return;
+        } else {
+            System.out.println("Couldn't register patient. Please try again");
+            return;
+        }
     }
 
     public static void login() throws IOException, NoSuchAlgorithmException {
@@ -167,11 +173,12 @@ public class MainClient {
             }
         } else {
             System.out.println("Login failed. Please try again.");
+            return;
         }
     }
 
 
-    public static void menuUser(){
+    public static void menuUser() {
         try {
             control = true;
             while (control) {
@@ -184,18 +191,24 @@ public class MainClient {
                     continue;
                 }
                 switch (option) {
-                    case 1:
+                    case 1: {
                         openMedicalRecord();
                         break;
-                    case 2:
+                    }
+                    case 2: {
                         sendMedicalRecord();
                         break;
-                    case 0:
+                    }
+                    case 3: {
+                        seeDoctorsNote();
+                        break;
+                    }
+                    case 0:{
                         control = false;
-                        break;
-                    default:
+                        break;}
+                    default:{
                         System.out.println("  NOT AN OPTION \n");
-                        break;
+                        break;}
                 }
             }
         } catch (NumberFormatException e) {
@@ -206,7 +219,36 @@ public class MainClient {
         }
     }
 
-    public static void printLoginMenu(){
+    private static void seeDoctorsNote() throws IOException {
+
+        String command = "DoctorsNote";
+        printWriter.println(command);
+
+        printWriter.println(patient.getName());
+        printWriter.println(patient.getSurname());
+
+        String response;
+        while ((response = bufferedReader.readLine()) != null ){
+            System.out.println(response);
+        }
+        //choose id of medical record
+        Integer mr_id = sc.nextInt();
+        printWriter.println(mr_id);
+
+        //receive doctors note
+        String dName = bufferedReader.readLine();
+        String dSurname = bufferedReader.readLine();
+        String notes = bufferedReader.readLine();
+        State st = State.valueOf(bufferedReader.readLine());
+        Treatment trt = Treatment.valueOf(bufferedReader.readLine());
+        LocalDate date = LocalDate.parse(bufferedReader.readLine());
+        DoctorsNote dn = new DoctorsNote(dName, dSurname, notes,st, trt, date);
+
+        System.out.println(dn);
+        return;
+    }
+
+    public static void printLoginMenu() {
         System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("@@                                                                  @@");
         System.out.println("@@                 Welcome.                                         @@");
@@ -224,6 +266,7 @@ public class MainClient {
         System.out.println("@@                 Welcome.                                         @@");
         System.out.println("@@                 1. Open Medical Record                           @@");
         System.out.println("@@                 2. Send Medical Record                           @@");
+        System.out.println("@@                 3. See Doctors Note                              @@");
         System.out.println("@@                 0. Exit                                          @@");
         System.out.println("@@                                                                  @@");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -247,24 +290,32 @@ public class MainClient {
     private static void openMedicalRecord() {
         patient.openRecord();
         System.out.println("Opening medical record...");
-        MedicalRecord mr = (patient.chooseMR()); // TODO mirar esto luego
+        //displays the last one created
+        MedicalRecord mr = (patient.chooseMR());
         System.out.println(mr);
+        return;
     }
 
     private static void sendMedicalRecord() throws IOException {
-
         MedicalRecord mr = (patient.chooseMR());
-        if (mr == null){
+        if (mr == null) {
             System.out.println("You don't have any medical records, create one first...");
             return;
         }
 
-        //TODO
-        String command = "login";
+        String command = "MedicalRecord";
         printWriter.println(command);
 
         System.out.println("Sending medical record...");
-        patient.sendMedicalRecord(mr, socket);
+        patient.sendMedicalRecord(mr, printWriter);
+        //Receives approval
+        String approval = bufferedReader.readLine();
+        if (approval.equals("MEDICALRECORD_SUCCESS")){
+            System.out.println("Medical Record sent correctly");
+            return;
+        } else{
+            System.out.println("Couldn't send Medical Record. Please try again.");
+        }
     }
 }
 

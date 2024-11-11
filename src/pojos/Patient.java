@@ -303,12 +303,10 @@ public class Patient {
      * Send the Medical Record to the server for the doctor to see
      *
      * @param medicalRecord complete Medical Record
-     * @param socket        Socket with the connection to the server
+     * @param printWriter to send data
      * @throws IOException in case the connection fails
      */
-    public void sendMedicalRecord(MedicalRecord medicalRecord, Socket socket) throws IOException {
-        //TODO send info, CHECK
-        PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+    public void sendMedicalRecord(MedicalRecord medicalRecord, PrintWriter printWriter) throws IOException {
         System.out.println("Connection established... sending text");
         printWriter.println(medicalRecord.getPatientName());
         printWriter.println(medicalRecord.getPatientSurname());

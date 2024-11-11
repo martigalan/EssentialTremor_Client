@@ -1,5 +1,7 @@
 package pojos;
 
+import java.time.LocalDate;
+
 public class DoctorsNote {
 
     /**
@@ -23,6 +25,11 @@ public class DoctorsNote {
      * Treatment the patient should undergo
      */
     private Treatment treatment;
+    /**
+     * Date of creation
+     */
+    private LocalDate date;
+
 
 
     /**
@@ -35,6 +42,7 @@ public class DoctorsNote {
         this.notes = notes;
         this.state = state;
         this.treatment = treatment;
+        this.date = LocalDate.now();
     }
 
     /**
@@ -51,7 +59,46 @@ public class DoctorsNote {
         this.notes = notes;
         this.state = state;
         this.treatment = treatment;
+        this.date = LocalDate.now();
     }
+    /**
+     * Constructor
+     * @param doctorName doctors name
+     * @param doctorSurname doctors surname
+     * @param notes annotations about a medical record
+     * @param state state assigned to the patient
+     * @param treatment treatment assigned to the patient
+     * @param date date of creation
+     */
+    public DoctorsNote(String doctorName, String doctorSurname, String notes, State state, Treatment treatment, LocalDate date) {
+        this.doctorName = doctorName;
+        this.doctorSurname = doctorSurname;
+        this.notes = notes;
+        this.state = state;
+        this.treatment = treatment;
+        this.date = date;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+
+    public void setDoctorSurname(String doctorSurname) {
+        this.doctorSurname = doctorSurname;
+    }
+
+    public String getDoctorSurname() {
+        return doctorSurname;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
     public State getState() {
         return state;
     }

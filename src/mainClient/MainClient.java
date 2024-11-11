@@ -129,7 +129,7 @@ public class MainClient {
         System.out.println("Patient and user data sent to the server for registration.");
         String approval = bufferedReader.readLine();
         if (approval.equals("REGISTER_SUCCESS")) {
-            System.out.println("Pateint registered correctly.");
+            System.out.println("Patient registered correctly.");
             return;
         } else {
             System.out.println("Couldn't register patient. Please try again");

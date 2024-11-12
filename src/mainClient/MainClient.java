@@ -54,8 +54,9 @@ public class MainClient {
                             login();
                             break;
                         case 0:
-                            //conexion = false;
                             control = false;
+                            //return "exit" to close communication
+                            printWriter.println("exit");
                             break;
                         default:
                             System.out.println("  NOT AN OPTION \n");
@@ -125,7 +126,7 @@ public class MainClient {
         printWriter.println(command);
 
         String patientData = name + "|" + surname + "|" + geneticBackground + "|" + username + "|" + encryptedPassword + "|patient";
-        printWriter.println(patientData);  //Send to server
+        printWriter.println(patientData);  //Send to server to manage info
         System.out.println("Patient and user data sent to the server for registration.");
         String approval = bufferedReader.readLine();
         if (approval.equals("REGISTER_SUCCESS")) {
@@ -153,7 +154,6 @@ public class MainClient {
         }
         String encryptedPassword = sb.toString();
 
-        //TODO
         String command = "login";
         printWriter.println(command);
 
@@ -205,6 +205,8 @@ public class MainClient {
                     }
                     case 0:{
                         control = false;
+                        //return "exit" to close communication
+                        printWriter.println("exit");
                         break;}
                     default:{
                         System.out.println("  NOT AN OPTION \n");
@@ -315,6 +317,7 @@ public class MainClient {
             return;
         } else{
             System.out.println("Couldn't send Medical Record. Please try again.");
+            return;
         }
     }
 }

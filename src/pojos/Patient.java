@@ -315,7 +315,7 @@ public class Patient {
         printWriter.println(medicalRecord.getHeight());//int
         //symptoms
         String symptoms = joinWithCommas(medicalRecord.getSymptoms());
-        System.out.println(symptoms);
+        printWriter.println(symptoms);
         //timestamp
         String time = joinIntegersWithCommas(medicalRecord.getAcceleration().getTimestamp());
         printWriter.println(time);

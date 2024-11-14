@@ -31,7 +31,10 @@ public class MainClient {
             inputStream = socket.getInputStream();
             boolean connection = true;
 
-            //3º si quiere login, coger de la bbdd del server el username y password y devuelvo TRUE o FALSE
+
+            //sending the role to start the PatientHandler
+            String role = "Patient";
+            printWriter.println(role);
 
             int option;
             try {
@@ -82,6 +85,7 @@ public class MainClient {
 
         while (true) {
             System.out.print("Name: ");
+            sc.nextLine();
             name = sc.nextLine().trim();
             if (!name.isEmpty()) break;
             System.out.println("Invalid name. Please enter a valid name.");
@@ -139,6 +143,9 @@ public class MainClient {
     }
 
     public static void login() throws IOException, NoSuchAlgorithmException {
+        String command = "login";
+        printWriter.println(command);
+
         Scanner sc = new Scanner(System.in);
         System.out.print("Username: ");
         String username = sc.nextLine();
@@ -154,26 +161,21 @@ public class MainClient {
         }
         String encryptedPassword = sb.toString();
 
-        String command = "login";
-        printWriter.println(command);
-
         String loginData = username + "|" + encryptedPassword;
         printWriter.println(loginData);
         System.out.println("User data sent to the server for login.");
 
         String response = bufferedReader.readLine(); //receive response from server
+        System.out.println(response);
         if (response.equals("LOGIN_SUCCESS")) {
-            String roleResponse = bufferedReader.readLine();
-            if (roleResponse.equals("WELCOME_PATIENT")) {
-                String patientData = bufferedReader.readLine();
-                String[] patientInfo = patientData.split("\\|");
-                Patient patient = new Patient(patientInfo[0], patientInfo[1], Boolean.parseBoolean(patientInfo[2]));
-                System.out.println("Welcome, " + patient.getName() + " " + patient.getSurname());
-                menuUser();
-            }
+            String patientData = bufferedReader.readLine();
+            String[] patientInfo = patientData.split("\\|");
+            Patient patient = new Patient(patientInfo[0], patientInfo[1], Boolean.parseBoolean(patientInfo[2]));
+            System.out.println("Welcome, " + patient.getName() + " " + patient.getSurname());
+            menuUser();
+
         } else {
             System.out.println("Login failed. Please try again.");
-            return;
         }
     }
 
@@ -203,14 +205,16 @@ public class MainClient {
                         seeDoctorsNote();
                         break;
                     }
-                    case 0:{
+                    case 0: {
                         control = false;
                         //return "exit" to close communication
                         printWriter.println("exit");
-                        break;}
-                    default:{
+                        break;
+                    }
+                    default: {
                         System.out.println("  NOT AN OPTION \n");
-                        break;}
+                        break;
+                    }
                 }
             }
         } catch (NumberFormatException e) {
@@ -230,7 +234,7 @@ public class MainClient {
         printWriter.println(patient.getSurname());
 
         String response;
-        while ((response = bufferedReader.readLine()) != null ){
+        while ((response = bufferedReader.readLine()) != null) {
             System.out.println(response);
         }
         //choose id of medical record
@@ -244,7 +248,7 @@ public class MainClient {
         State st = State.valueOf(bufferedReader.readLine());
         Treatment trt = Treatment.valueOf(bufferedReader.readLine());
         LocalDate date = LocalDate.parse(bufferedReader.readLine());
-        DoctorsNote dn = new DoctorsNote(dName, dSurname, notes,st, trt, date);
+        DoctorsNote dn = new DoctorsNote(dName, dSurname, notes, st, trt, date);
 
         System.out.println(dn);
         return;
@@ -312,10 +316,10 @@ public class MainClient {
         patient.sendMedicalRecord(mr, printWriter);
         //Receives approval
         String approval = bufferedReader.readLine();
-        if (approval.equals("MEDICALRECORD_SUCCESS")){
+        if (approval.equals("MEDICALRECORD_SUCCESS")) {
             System.out.println("Medical Record sent correctly");
             return;
-        } else{
+        } else {
             System.out.println("Couldn't send Medical Record. Please try again.");
             return;
         }

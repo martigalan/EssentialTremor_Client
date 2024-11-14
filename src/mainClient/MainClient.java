@@ -172,7 +172,7 @@ public class MainClient {
             String[] patientInfo = patientData.split("\\|");
             Patient patient = new Patient(patientInfo[0], patientInfo[1], Boolean.parseBoolean(patientInfo[2]));
             System.out.println("Welcome, " + patient.getName() + " " + patient.getSurname());
-            menuUser();
+            menuUser(patient);
 
         } else {
             System.out.println("Login failed. Please try again.");
@@ -180,13 +180,17 @@ public class MainClient {
     }
 
 
-    public static void menuUser() {
+    public static void menuUser(Patient patient) {
         try {
             control = true;
             while (control) {
                 printPatientMenu();
                 try {
-                    option = sc.nextInt();
+                    if (sc.hasNextInt()) {
+                        option = sc.nextInt();
+                    } else {
+                        option = 0;
+                    }
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid input. Please enter a number.");
                     sc.next();
@@ -194,15 +198,15 @@ public class MainClient {
                 }
                 switch (option) {
                     case 1: {
-                        openMedicalRecord();
+                        openMedicalRecord(patient);
                         break;
                     }
                     case 2: {
-                        sendMedicalRecord();
+                        sendMedicalRecord(patient);
                         break;
                     }
                     case 3: {
-                        seeDoctorsNote();
+                        seeDoctorsNote(patient);
                         break;
                     }
                     case 0: {
@@ -225,7 +229,7 @@ public class MainClient {
         }
     }
 
-    private static void seeDoctorsNote() throws IOException {
+    private static void seeDoctorsNote(Patient patient) throws IOException {
 
         String command = "DoctorsNote";
         printWriter.println(command);
@@ -293,16 +297,15 @@ public class MainClient {
         }
     }
 
-    private static void openMedicalRecord() {
+    private static void openMedicalRecord(Patient patient) {
         patient.openRecord();
         System.out.println("Opening medical record...");
         //displays the last one created
         MedicalRecord mr = (patient.chooseMR());
         System.out.println(mr);
-        return;
     }
 
-    private static void sendMedicalRecord() throws IOException {
+    private static void sendMedicalRecord(Patient patient) throws IOException {
         MedicalRecord mr = (patient.chooseMR());
         if (mr == null) {
             System.out.println("You don't have any medical records, create one first...");

@@ -216,10 +216,14 @@ public class Patient {
             try {
                 //close bluetooth connection
                 if (bitalino != null) {
+                    Thread.sleep(200); // Pequeño retardo
                     bitalino.close();
+                    System.out.println("Bluetooth connection rightly closed.");
                 }
             } catch (BITalinoException ex) {
-                Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println("Error al cerrar la conexión: " + ex.getMessage());
+            } catch (InterruptedException e) {
+                System.err.println("Interrupción del hilo: " + e.getMessage());
             }
         }
         return data;
@@ -279,12 +283,13 @@ public class Patient {
         System.out.println("- Height (cm): ");
         int height = sc.nextInt();
         System.out.println("- Symptoms (enter symptoms separated by commas): ");
+        sc.nextLine();
         String symptomsInput = sc.nextLine();
 
         //Takes the symptoms input and creates a List
         List<String> symptoms = Arrays.asList(symptomsInput.split(","));
         symptoms = symptoms.stream().map(String::trim).collect(Collectors.toList()); // Trim extra spaces
-        sc.close();
+        //sc.close(); NO CERRAR SCANNER QUE DA ERROR CON BITALINO - BLUETOOTH SINO
         return new MedicalRecord(age, weight, height, symptoms);
     }
 
@@ -295,6 +300,10 @@ public class Patient {
      */
     public MedicalRecord chooseMR() { //TODO choose
         int size = this.getMedicalRecords().size();
+        if (size == 0) {
+            System.out.println("No medical records found.");
+            return null;
+        }
         MedicalRecord mr = this.getMedicalRecords().get(size - 1);
         return mr;
     }

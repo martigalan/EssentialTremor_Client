@@ -2,7 +2,6 @@ package pojos;
 
 import bITalino.BITalino;
 import bITalino.BITalinoException;
-import bITalino.BitalinoDemo;
 import bITalino.Frame;
 import data.ACC;
 import data.Data;
@@ -209,9 +208,9 @@ public class Patient {
             saveDataToFile(this.getName(), acc, emg); //save info in a txt file
 
         } catch (BITalinoException ex) {
-            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Throwable ex) {
-            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 //close bluetooth connection
@@ -245,7 +244,7 @@ public class Patient {
         try {
             Files.createDirectories(folderPath);
         } catch (IOException e) {
-            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, "Error creating directory", e);
+            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, "Error creating directory", e);
         }
 
         String fileName = "BITalinoData/" + patientName + "_" + timestamp + ".txt";
@@ -265,7 +264,7 @@ public class Patient {
 
             System.out.println("Data saved to " + fileName);
         } catch (IOException e) {
-            Logger.getLogger(BitalinoDemo.class.getName()).log(Level.SEVERE, "Error writing file", e);
+            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, "Error writing file", e);
         }
     }
 
@@ -366,7 +365,6 @@ public class Patient {
      * @throws IOException in case connection fails
      */
     private DoctorsNote receiveDoctorsNote()throws IOException {
-        //TODO check this one
         DoctorsNote doctorsNote = null;
         try (ServerSocket serverSocket = new ServerSocket(9009)) {  // Puerto 9009 para coincidir con el cliente
             System.out.println("Server started, waiting for client...");
@@ -392,8 +390,8 @@ public class Patient {
                 releaseReceivingResources(bufferedReader, socket, serverSocket);
 
                 doctorsNote = new DoctorsNote(doctorName, doctorSurname, notes, st, trt);
-                //TODO meter esto en lista doctor
-                //TODO this is in the main
+                //meter esto en lista doctor
+                //this is in the main
                 //DoctorsNote doctorsNote = createDoctorsNote(medicalRecord);
                 //medicalRecord.getDoctorsNotes().add(doctorsNote);
                 return doctorsNote;
@@ -436,7 +434,7 @@ public class Patient {
      * Displays the DoctorsNote sent by the doctor
      */
     private void seeDoctorsNotes() {
-        //TODO here the patient chooses what record they want to see
+        //here the patient chooses what record they want to see
 
     }
 }

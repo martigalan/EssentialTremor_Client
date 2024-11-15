@@ -46,22 +46,33 @@ import javax.bluetooth.RemoteDevice;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
- /// The %BITalino device class.
-public class BITalino {
-	
-        /// Array with the list of analog inputs to be acquired from the device (auxiliary variable)
+ /**
+  * Bitalino device class
+  */
+ public class BITalino {
+	 /**
+	  * Array with the list of analog inputs to be acquired from the device (auxiliary variable)
+	  */
 	private int[] analogChannels = null;
 
-        /// Number of bytes expected for a frame sent by the device (auxiliary variable)
+	 /**
+	  * Number of bytes expected for a frame sent by the device (auxiliary variable)
+	  */
 	private int number_bytes = 0;
 
-        /// Instance of the Bluetooth socket connection established with the BITalino device
+	 /**
+	  * Instance of the Bluetooth socket connection established with the BITalino device
+	  */
 	private StreamConnection hSocket = null;
 
-        /// Instance of the data stream with data coming from the BITalino device
+	 /**
+	  * Instance of the data stream with data coming from the BITalino device
+	  */
 	private DataInputStream iStream = null;
 
-        /// Instance of the data stream through which data can be sent to the BITalino device
+	 /**
+	  * Instance of the data stream through which data can be sent to the BITalino device
+	  */
 	private DataOutputStream oStream = null;
 	
 	public BITalino() {}

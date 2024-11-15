@@ -238,24 +238,34 @@ public class MainClient {
         printWriter.println(patient.getSurname());
 
         String response;
-        while ((response = bufferedReader.readLine()) != null) {
+        Integer numberOfMR = Integer.parseInt(bufferedReader.readLine());
+        Integer i = 0;
+        while (i < numberOfMR) {
+            response = bufferedReader.readLine();
             System.out.println(response);
+            i++;
         }
+
         //choose id of medical record
+        System.out.println("Please choose a medical record ID:");
         Integer mr_id = sc.nextInt();
         printWriter.println(mr_id);
 
-        //receive doctors note
-        String dName = bufferedReader.readLine();
-        String dSurname = bufferedReader.readLine();
-        String notes = bufferedReader.readLine();
-        State st = State.valueOf(bufferedReader.readLine());
-        Treatment trt = Treatment.valueOf(bufferedReader.readLine());
-        LocalDate date = LocalDate.parse(bufferedReader.readLine());
-        DoctorsNote dn = new DoctorsNote(dName, dSurname, notes, st, trt, date);
+        String approval = bufferedReader.readLine();
+        if (approval.equals("FOUND")) {
+            //receive doctors note
+            String dName = bufferedReader.readLine();
+            String dSurname = bufferedReader.readLine();
+            String notes = bufferedReader.readLine();
+            State st = State.valueOf(bufferedReader.readLine());
+            Treatment trt = Treatment.valueOf(bufferedReader.readLine());
+            LocalDate date = LocalDate.parse(bufferedReader.readLine());
+            DoctorsNote dn = new DoctorsNote(dName, dSurname, notes, st, trt, date);
 
-        System.out.println(dn);
-        return;
+            System.out.println(dn);
+        } else {
+            System.out.println("No doctors note found for this medical record.");
+        }
     }
 
     public static void printLoginMenu() {

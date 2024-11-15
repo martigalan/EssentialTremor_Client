@@ -44,7 +44,7 @@ public class BitalinoDemo {
             EMG emg = new EMG();
 
             //Read in total 10000000 times
-            for (int j = 0; j < 100; j++) { //TODO CHANGE
+            for (int j = 0; j < 100; j++) {
 
                 //Each time read a block of 10 samples 
                 int block_size=10;

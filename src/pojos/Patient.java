@@ -298,7 +298,7 @@ public class Patient {
      *
      * @return the last Medical Record of the patients list
      */
-    public MedicalRecord chooseMR() { //TODO choose
+    public MedicalRecord chooseMR() {
         int size = this.getMedicalRecords().size();
         if (size == 0) {
             System.out.println("No medical records found.");

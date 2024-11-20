@@ -287,8 +287,23 @@ public class MainClient {
         Integer mr_id = sc.nextInt();
         printWriter.println(mr_id);
 
+
+
         String approval = bufferedReader.readLine();
         if (approval.equals("FOUND")) {
+            Integer numberOfDN = Integer.parseInt(bufferedReader.readLine());
+            i = 0;
+            while (i < numberOfDN) {
+                response = bufferedReader.readLine();
+                System.out.println(response);
+                i++;
+            }
+
+            //choose dn id
+            System.out.println("Please choose a doctors note ID:");
+            Integer dn_id = sc.nextInt();
+            printWriter.println(dn_id);
+
             //receive doctors note
             String dName = bufferedReader.readLine();
             String dSurname = bufferedReader.readLine();

@@ -36,10 +36,7 @@ public class Patient {
      * TRUE if there is, FALSE if not
      */
     private Boolean genetic_background;
-    /**
-     * User to store username and password for the application
-     */
-    private User user;
+
     /**
      * A list of all the medical records the patient has
      */

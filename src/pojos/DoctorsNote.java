@@ -80,33 +80,13 @@ public class DoctorsNote {
     }
 
 
-    public State getState() {
-        return state;
-    }
-
-
-    public Treatment getTreatment() {
-        return treatment;
-    }
-
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
     @Override
     public String toString() {
-        return "DoctorsNote{" +
-                "doctorName='" + doctorName + '\'' +
-                ", doctorSurname='" + doctorSurname + '\'' +
-                ", notes='" + notes + '\'' +
-                ", state=" + state +
-                ", treatment=" + treatment +
-                ", date=" + date +
-                '}';
+        return "Doctors name: " + doctorName +
+                "\nDoctors surname: " + doctorSurname  +
+                "\nNotes: " + notes +
+                "\nState: " + state +
+                "\nTreatment: " + treatment +
+                "\nDate: " + date;
     }
 }

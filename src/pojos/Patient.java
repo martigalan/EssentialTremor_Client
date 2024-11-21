@@ -36,10 +36,7 @@ public class Patient {
      * TRUE if there is, FALSE if not
      */
     private Boolean genetic_background;
-    /**
-     * User to store username and password for the application
-     */
-    private User user;
+
     /**
      * A list of all the medical records the patient has
      */
@@ -65,17 +62,6 @@ public class Patient {
         this.doctors = new ArrayList<Doctor>();
     }
 
-    public void setMedicalRecords(List<MedicalRecord> medicalRecords) {
-        this.medicalRecords = medicalRecords;
-    }
-
-    public List<Doctor> getDoctors() {
-        return doctors;
-    }
-
-    public void setDoctors(List<Doctor> doctors) {
-        this.doctors = doctors;
-    }
 
     public String getName() {
         return name;
@@ -89,25 +75,10 @@ public class Patient {
         return surname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public List<MedicalRecord> getMedicalRecords() {
         return medicalRecords;
     }
 
-    public void setMedicalRecord(List<MedicalRecord> medicalRecords) {
-        this.medicalRecords = medicalRecords;
-    }
 
     /**
      * Patients String representation
@@ -376,83 +347,4 @@ public class Patient {
                 .collect(Collectors.joining(","));
     }
 
-    /**
-     * Gets the doctors note about the medical record that was previously sent
-     *
-     * @return DoctorsNote containing the evaluation
-     * @throws IOException in case connection fails
-     */
-    private DoctorsNote receiveDoctorsNote()throws IOException {
-        DoctorsNote doctorsNote = null;
-        try (ServerSocket serverSocket = new ServerSocket(9009)) {  // Puerto 9009 para coincidir con el cliente
-            System.out.println("Server started, waiting for client...");
-
-            try (Socket socket = serverSocket.accept();
-                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-
-                System.out.println("Client connected. Receiving data...");
-
-                // Read each line
-                String doctorName = bufferedReader.readLine();
-                System.out.println(doctorName);
-                String doctorSurname = bufferedReader.readLine();
-                System.out.println(doctorSurname);
-                String notes = bufferedReader.readLine();
-                System.out.println(notes);
-                State st = State.valueOf(bufferedReader.readLine());
-                System.out.println(st);
-                Treatment trt = Treatment.valueOf(bufferedReader.readLine());
-                System.out.println(trt);
-
-
-                releaseReceivingResources(bufferedReader, socket, serverSocket);
-
-                doctorsNote = new DoctorsNote(doctorName, doctorSurname, notes, st, trt);
-                //meter esto en lista doctor
-                //this is in the main
-                //DoctorsNote doctorsNote = createDoctorsNote(medicalRecord);
-                //medicalRecord.getDoctorsNotes().add(doctorsNote);
-                return doctorsNote;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return doctorsNote;
-    }
-
-    /**
-     * Realeases the resources that were used
-     *
-     * @param bufferedReader used to read
-     * @param socket         connection with the server
-     * @param socketServidor server socket
-     */
-    private static void releaseReceivingResources(BufferedReader bufferedReader,
-                                                  Socket socket, ServerSocket socketServidor) {
-        try {
-            bufferedReader.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            socket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            socketServidor.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Displays the DoctorsNote sent by the doctor
-     */
-    private void seeDoctorsNotes() {
-        //here the patient chooses what record they want to see
-
-    }
 }

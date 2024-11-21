@@ -308,11 +308,14 @@ public class MainClient {
             String dName = bufferedReader.readLine();
             String dSurname = bufferedReader.readLine();
             String notes = bufferedReader.readLine();
-            State st = State.valueOf(bufferedReader.readLine());
-            Treatment trt = Treatment.valueOf(bufferedReader.readLine());
+            Integer st_id = Integer.parseInt(bufferedReader.readLine());
+            State st = State.getById(st_id);
+            Integer trt_id = Integer.parseInt(bufferedReader.readLine());
+            Treatment trt = Treatment.getById(trt_id);
             LocalDate date = LocalDate.parse(bufferedReader.readLine());
             DoctorsNote dn = new DoctorsNote(dName, dSurname, notes, st, trt, date);
 
+            //TODO hacer bonito
             System.out.println(dn);
         } else {
             System.out.println("No doctors note found for this medical record.");

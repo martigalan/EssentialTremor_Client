@@ -59,26 +59,6 @@ public class MedicalRecord {
      */
     private LocalDate date;
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public List<Doctor> getDoctors() {
-        return doctors;
-    }
-    public void setDoctors(List<Doctor> doctors) {
-        this.doctors = doctors;
-    }
-    public List<DoctorsNote> getDoctorsNotes() {
-        return doctorsNotes;
-    }
-    public void setDoctorsNotes(List<DoctorsNote> doctorsNotes) {
-        this.doctorsNotes = doctorsNotes;
-    }
 
     public Boolean getGenetic_background() {
         return genetic_background;
@@ -94,22 +74,6 @@ public class MedicalRecord {
 
     public void setPatientName(String patientName) {
         this.patientName = patientName;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setSymptoms(List<String> symptoms) {
-        this.symptoms = symptoms;
     }
 
     public String getPatientSurname() {
@@ -170,32 +134,6 @@ public class MedicalRecord {
         this.date = LocalDate.now();
     }
 
-    /**
-     * Constructor
-     * @param patientName patients name
-     * @param patientSurname patients surname
-     * @param age patients age
-     * @param weight patients weight
-     * @param height patients height
-     * @param symptoms patients symptoms
-     * @param acceleration patients acceleration data
-     * @param emg patients emg data
-     * @param genetic_background patients genetic background info
-     */
-    public MedicalRecord(String patientName, String patientSurname, int age, double weight, int height, List<String> symptoms, ACC acceleration, EMG emg, Boolean genetic_background) {
-        this.patientName = patientName;
-        this.patientSurname = patientSurname;
-        this.age = age;
-        this.weight = weight;
-        this.height = height;
-        this.symptoms = symptoms;
-        this.acceleration = acceleration;
-        this.emg = emg;
-        this.genetic_background = genetic_background;
-        this.doctors = new ArrayList<>();
-        this.doctorsNotes = new ArrayList<>();
-        this.date = LocalDate.now();
-    }
 
     /**
      * Medical Record string representation
@@ -203,30 +141,15 @@ public class MedicalRecord {
      */
     @Override
     public String toString() {
-        return "MedicalRecord{" +
-                "patientName='" + patientName + '\'' +
-                ", surname= '"+ patientSurname + '\''+
-                ", age=" + age +
-                ", weight=" + weight +
-                ", height=" + height +
-                ", symptoms=" + symptoms +
-                ", genetic_background=" + genetic_background +
-                ", acc=" + acceleration +
-                ", emg=" + emg +
-                '}';
+        return "Patients name: " + patientName +
+                "\nSurname: "+ patientSurname +
+                "\nAge: " + age +
+                "\nWeight: " + weight +
+                "\nHeight: " + height +
+                "\nSymptoms: " + symptoms +
+                "\nGenetic background: " + genetic_background +
+                "\nAcceleration data: " + acceleration +
+                "\nEMG data: " + emg;
     }
 
-    /**
-     * Function that calls another one to represent the acceleration data
-     */
-    void showAcc() {
-        this.acceleration.plotSignal();
-    }
-
-    /**
-     * Function that calls another one to represent the emg data
-     */
-    void showEMG(){
-        this.emg.plotSignal();
-    }
 }

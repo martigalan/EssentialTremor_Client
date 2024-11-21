@@ -20,7 +20,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jcommon-1.0.12.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/jcommon-1.0.12/jcommon-1.0.12/jcommon-1.0.12.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

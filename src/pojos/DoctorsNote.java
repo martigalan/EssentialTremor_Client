@@ -79,47 +79,14 @@ public class DoctorsNote {
         this.date = date;
     }
 
-    public String getDoctorName() {
-        return doctorName;
-    }
 
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
-
-    public void setDoctorSurname(String doctorSurname) {
-        this.doctorSurname = doctorSurname;
-    }
-
-    public String getDoctorSurname() {
-        return doctorSurname;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
-
-    public Treatment getTreatment() {
-        return treatment;
-    }
-
-    public void setTreatment(Treatment treatment) {
-        this.treatment = treatment;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
+    @Override
+    public String toString() {
+        return "Doctors name: " + doctorName +
+                "\nDoctors surname: " + doctorSurname  +
+                "\nNotes: " + notes +
+                "\nState: " + state +
+                "\nTreatment: " + treatment +
+                "\nDate: " + date;
     }
 }

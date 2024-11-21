@@ -45,7 +45,10 @@ public class Patient {
      * A list of the doctors that the patient has
      */
     private List<Doctor> doctors;
-
+    /**
+     * User information
+     */
+    private  User user;
 
     /**
      * Constructor
@@ -79,6 +82,9 @@ public class Patient {
         return medicalRecords;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     /**
      * Patients String representation

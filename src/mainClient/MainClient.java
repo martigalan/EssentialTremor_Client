@@ -182,6 +182,8 @@ public class MainClient {
         System.out.print("Password: ");
         String password = sc.nextLine();
 
+        User user = new User(username, password.getBytes(), "patient");
+
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(password.getBytes());
         byte[] hashedPassword = md.digest();
@@ -201,6 +203,7 @@ public class MainClient {
             String patientData = bufferedReader.readLine();
             String[] patientInfo = patientData.split("\\|");
             patient = new Patient(patientInfo[0], patientInfo[1], Boolean.parseBoolean(patientInfo[2]));
+            patient.setUser(user);
             System.out.println("Welcome, " + patient.getName() + " " + patient.getSurname());
             menuUser();
 
@@ -315,7 +318,6 @@ public class MainClient {
             LocalDate date = LocalDate.parse(bufferedReader.readLine());
             DoctorsNote dn = new DoctorsNote(dName, dSurname, notes, st, trt, date);
 
-            //TODO hacer bonito
             System.out.println(dn);
         } else {
             System.out.println("No doctors note found for this medical record.");

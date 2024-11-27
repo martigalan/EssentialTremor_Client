@@ -492,5 +492,13 @@ import javax.microedition.io.StreamConnection;
 		}
 		
 	}
-	
-}
+	 /**
+	  * Checks if the connection to the BITalino device is open.
+	  * @return true if the connection is open; false otherwise.
+	  */
+	 public boolean isOpen() {
+		 return hSocket != null && iStream != null && oStream != null;
+	 }
+
+
+ }

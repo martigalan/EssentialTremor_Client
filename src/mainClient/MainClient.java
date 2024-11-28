@@ -262,7 +262,6 @@ public class MainClient {
             }
         } catch (NumberFormatException e) {
             System.out.println("  NOT A NUMBER. Closing application... \n");
-            sc.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

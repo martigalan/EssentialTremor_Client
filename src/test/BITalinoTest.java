@@ -2,55 +2,77 @@ package test;
 
 import bITalino.BITalinoException;
 import bITalino.Frame;
+import data.ACC;
+import data.EMG;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import bITalino.BITalino;
+import pojos.Patient;
 
 import javax.bluetooth.RemoteDevice;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BITalinoTest {
-    private BITalino bitalino;
+    private BITalino bitalino ;
 
-    @BeforeEach
-    public void setUp() {
-        bitalino = new BITalino();
-    }
 
     @Test
     public void testBITalinoConnection() {
+        bitalino = null;
+        Frame[] frame;
         try {
-            // Looks for devices
+            bitalino = new BITalino();
+
             Vector<RemoteDevice> devices = bitalino.findDevices();
-            assertNotNull(devices, "There must be devices, the list should not be null.");
-            assertFalse(devices.isEmpty(), "No devices found.");
 
             String macAddress = "20:17:11:20:51:27";
 
-            int samplingRate = 100;
-            bitalino.open(macAddress, samplingRate);
+            //Sampling rate, should be 10, 100 or 1000
+            int SamplingRate = 100;
+            bitalino.open(macAddress, SamplingRate);
 
-            // There should not be exceptions thrown
-            assertDoesNotThrow(() -> bitalino.open(macAddress, samplingRate),
-                    "Can't open connexion with BITalino.");
+            assertTrue(bitalino.isOpen(), "Couldn't stablish connexion with BITalino.");
 
-            // Read to verify that it works
-            int blockSize = 10;
-            Frame[] frames = bitalino.read(blockSize);
+            int[] channelsToAcquire = {0, 5};
+            bitalino.start(channelsToAcquire);
 
-            assertNotNull(frames, "No messages received.");
-            assertTrue(frames.length > 0, "Block is empty.");
+            //Objects EMG and ACC
+            ACC acc = new ACC();
+            EMG emg = new EMG();
 
-            // Sees if any value is valid
-            assertTrue(frames[0].analog.length > 0, "No valid values.");
+            //Read in total 10000000 times
+            for (int j = 0; j < 100; j++) {
+
+                //Each time read a block of 10 samples
+                int block_size = 10;
+                frame = bitalino.read(block_size);
+
+
+                assertNotNull(frame, "It has not received data");
+                assertEquals(block_size, frame.length);
+
+
+                //Print the samples
+                for (int i = 0; i < frame.length; i++) {
+
+                    acc.getTimestamp().add(j * block_size + i);
+                    emg.getTimestamp().add(j * block_size + i);
+
+                    emg.getSignalData().add(frame[i].analog[0]);
+                    acc.getSignalData().add(frame[i].analog[1]);
+                }
+            }
+            //stop acquisition
+            bitalino.stop();
 
             bitalino.close();
-            assertDoesNotThrow(() -> bitalino.close(), "Error when closing connexion.");
 
         } catch (BITalinoException ex) {
-            fail("Error with the connexion of BITalino: " + ex.getMessage());
-        } catch (Exception ex) {
+            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Throwable ex) {
             fail("Error: " + ex.getMessage());
         }
     }

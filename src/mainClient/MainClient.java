@@ -45,7 +45,11 @@ public class MainClient {
 
     public static void main(String[] args) {
         try {
-            socket = new Socket("localhost", 9000);
+
+            System.out.println("IP of the server: ");
+            String ip = sc.nextLine();
+
+            socket = new Socket(ip, 9000);
             printWriter = new PrintWriter(socket.getOutputStream(), true);
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             boolean connection = true;

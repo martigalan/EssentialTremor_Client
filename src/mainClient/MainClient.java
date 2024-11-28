@@ -307,6 +307,7 @@ public class MainClient {
 
             //choose dn id
             System.out.println("Please choose a doctors note ID:");
+            //TODO exception
             Integer dn_id = sc.nextInt();
             printWriter.println(dn_id);
 
@@ -412,7 +413,7 @@ public class MainClient {
         if (approval.equals("MEDICALRECORD_SUCCESS")) {
             System.out.println("Medical Record sent correctly");
         } else {
-            System.out.println("Couldn't send Medical Record. Please try again.");
+            System.out.println("Couldn't send Medical Record. Please, try again.");
         }
     }
 }

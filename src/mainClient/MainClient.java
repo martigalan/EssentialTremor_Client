@@ -4,6 +4,7 @@ import pojos.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -94,7 +95,7 @@ public class MainClient {
             }
         } catch (IOException e) {
             System.out.println("Error connecting to the server.");
-            e.printStackTrace();
+            //e.printStackTrace();
         } finally {
             sc.close();
             releaseResourcesClient(bufferedReader, printWriter, socket);
@@ -263,7 +264,7 @@ public class MainClient {
         } catch (NumberFormatException e) {
             System.out.println("  NOT A NUMBER. Closing application... \n");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error when connecting to the server.");
         }
     }
 
@@ -367,14 +368,14 @@ public class MainClient {
      */
     private static void releaseResourcesClient(BufferedReader bf, PrintWriter pw, Socket socket) {
         try {
-            bf.close();
-            pw.close();
+            if (bf != null) bf.close();
+            if (pw != null )pw.close();
         } catch (IOException ex) {
             Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            socket.close();
+            if (socket != null )socket.close();
         } catch (IOException ex) {
             Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
         }

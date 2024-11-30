@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"bITalino"},{"l":"data"},{"l":"mainClient"},{"l":"pojos"},{"l":"test"}];updateSearchResults();

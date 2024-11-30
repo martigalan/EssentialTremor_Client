@@ -294,38 +294,55 @@ public class MainClient {
         Integer mr_id = sc.nextInt();
         printWriter.println(mr_id);
 
-
-
-        String approval = bufferedReader.readLine();
-        if (approval.equals("FOUND")) {
-            Integer numberOfDN = Integer.parseInt(bufferedReader.readLine());
-            i = 0;
-            while (i < numberOfDN) {
-                response = bufferedReader.readLine();
-                System.out.println(response);
-                i++;
-            }
-
-            //choose dn id
-            System.out.println("Please choose a doctors note ID:");
-            //TODO exception
-            Integer dn_id = sc.nextInt();
-            printWriter.println(dn_id);
-
-            //receive doctors note
-            String dName = bufferedReader.readLine();
-            String dSurname = bufferedReader.readLine();
-            String notes = bufferedReader.readLine();
-            Integer st_id = Integer.parseInt(bufferedReader.readLine());
-            State st = State.getById(st_id);
-            Integer trt_id = Integer.parseInt(bufferedReader.readLine());
-            Treatment trt = Treatment.getById(trt_id);
-            LocalDate date = LocalDate.parse(bufferedReader.readLine());
-            DoctorsNote dn = new DoctorsNote(dName, dSurname, notes, st, trt, date);
-
-            System.out.println(dn);
+        String mrNull = bufferedReader.readLine();
+        if (mrNull.equals("NULL")){
+            System.out.println("No medical records found with that ID.");
         } else {
-            System.out.println("No doctors note found for this medical record.");
+            String mrCorrect = bufferedReader.readLine();
+            if (mrCorrect.equals("NOT_CORRECT")) {
+                System.out.println("That ID doesn't match any of your medical records.");
+            } else if (mrCorrect.equals("CORRECT")) {
+                String approval = bufferedReader.readLine();
+                if (approval.equals("FOUND")) {
+                    Integer numberOfDN = Integer.parseInt(bufferedReader.readLine());
+                    i = 0;
+                    while (i < numberOfDN) {
+                        response = bufferedReader.readLine();
+                        System.out.println(response);
+                        i++;
+                    }
+
+                    //choose dn id
+                    System.out.println("Please choose a doctors note ID:");
+                    Integer dn_id = sc.nextInt();
+                    printWriter.println(dn_id);
+
+                    String dnNull = bufferedReader .readLine();
+                    if (dnNull.equals("NULL")){
+                        System.out.println("No doctors note found with that ID.");
+                    } else {
+                        String dnCorrect = bufferedReader.readLine();
+                        if (dnCorrect.equals("NOT_CORRECT")) {
+                            System.out.println("That ID doesn't match any of your doctors notes.");
+                        } else if (dnCorrect.equals("CORRECT")) {
+                            //receive doctors note
+                            String dName = bufferedReader.readLine();
+                            String dSurname = bufferedReader.readLine();
+                            String notes = bufferedReader.readLine();
+                            Integer st_id = Integer.parseInt(bufferedReader.readLine());
+                            State st = State.getById(st_id);
+                            Integer trt_id = Integer.parseInt(bufferedReader.readLine());
+                            Treatment trt = Treatment.getById(trt_id);
+                            LocalDate date = LocalDate.parse(bufferedReader.readLine());
+                            DoctorsNote dn = new DoctorsNote(dName, dSurname, notes, st, trt, date);
+
+                            System.out.println(dn);
+                        }
+                    }
+                } else {
+                    System.out.println("No doctors note found for this medical record.");
+                }
+            }
         }
     }
 

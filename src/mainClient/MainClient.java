@@ -2,13 +2,17 @@ package mainClient;
 
 import pojos.*;
 
+import javax.crypto.Cipher;
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
+import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -43,6 +47,10 @@ public class MainClient {
      * Control variable for options the user chooses
      */
     private static int option;
+    /**
+     * Public key for encryption
+     */
+    private static RSAPublicKey publicKey;
 
     public static void main(String[] args) {
         try {
@@ -55,10 +63,20 @@ public class MainClient {
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             boolean connection = true;
 
-
             //sending the role to start the PatientHandler
             String role = "Patient";
             printWriter.println(role);
+
+            String base64PublicKey = bufferedReader.readLine();
+
+            //decodificar la clave pública
+            byte[] decodedKey = Base64.getDecoder().decode(base64PublicKey);
+
+            //crear clave pública
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            publicKey = (RSAPublicKey) keyFactory.generatePublic(keySpec);
+
 
             int option;
             try {
@@ -92,10 +110,16 @@ public class MainClient {
                 }
             } catch (NumberFormatException | NoSuchAlgorithmException e) {
                 System.out.println("  NOT A NUMBER. Closing application... \n");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         } catch (IOException e) {
             System.out.println("Error connecting to the server.");
             //e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e);
         } finally {
             sc.close();
             releaseResourcesClient(bufferedReader, printWriter, socket);
@@ -108,7 +132,7 @@ public class MainClient {
      * @throws IOException in case of Input/Output exception.
      * @throws NoSuchAlgorithmException in case of encryption error.
      */
-    public static void registerPatient() throws IOException, NoSuchAlgorithmException {
+    public static void registerPatient() throws Exception {
         System.out.println("Please enter patient details:");
         String name = "", surname = "", username = "", password = "";
         boolean geneticBackground = false;
@@ -160,7 +184,9 @@ public class MainClient {
         printWriter.println(command);
 
         String patientData = name + "|" + surname + "|" + geneticBackground + "|" + username + "|" + encryptedPassword + "|patient";
-        printWriter.println(patientData);  //Send to server to manage info
+        byte[] encryptedData = encryptDataWithPublicKey(patientData, publicKey);
+        printWriter.println(Base64.getEncoder().encodeToString(encryptedData));
+        //printWriter.println(patientData);  //Send to server to manage info
         System.out.println("Patient and user data sent to the server for registration.");
         String approval = bufferedReader.readLine();
         if (approval.equals("REGISTER_SUCCESS")) {
@@ -177,7 +203,7 @@ public class MainClient {
      * @throws IOException in case of Input/Output exception.
      * @throws NoSuchAlgorithmException in case of encryption error.
      */
-    public static void login() throws IOException, NoSuchAlgorithmException {
+    public static void login() throws Exception {
         String command = "login";
         printWriter.println(command);
 
@@ -199,7 +225,9 @@ public class MainClient {
         String encryptedPassword = sb.toString();
 
         String loginData = username + "|" + encryptedPassword;
-        printWriter.println(loginData);
+        byte[] encryptedData = encryptDataWithPublicKey(loginData, publicKey);
+        printWriter.println(Base64.getEncoder().encodeToString(encryptedData));
+        //printWriter.println(loginData);
         System.out.println("User data sent to the server for login.");
 
         String response = bufferedReader.readLine(); //receive response from server
@@ -263,7 +291,7 @@ public class MainClient {
             }
         } catch (NumberFormatException e) {
             System.out.println("  NOT A NUMBER. Closing application... \n");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Error when connecting to the server.");
         }
     }
@@ -272,13 +300,17 @@ public class MainClient {
      * The patient can choose a medical record and see the doctors notes associated to it.
      * @throws IOException in case of Input/Output exception.
      */
-    private static void seeDoctorsNote() throws IOException {
+    private static void seeDoctorsNote() throws Exception {
 
         String command = "DoctorsNote";
         printWriter.println(command);
 
-        printWriter.println(patient.getName());
-        printWriter.println(patient.getSurname());
+        byte[] encryptedPName = encryptDataWithPublicKey(patient.getName(), publicKey);
+        printWriter.println(Base64.getEncoder().encodeToString(encryptedPName));
+        //printWriter.println(patient.getName());
+        byte[] encryptedPSurname = encryptDataWithPublicKey(patient.getSurname(), publicKey);
+        printWriter.println(Base64.getEncoder().encodeToString(encryptedPSurname));
+        //printWriter.println(patient.getSurname());
 
         String response;
         Integer numberOfMR = Integer.parseInt(bufferedReader.readLine());
@@ -292,7 +324,10 @@ public class MainClient {
         //choose id of medical record
         System.out.println("Please choose a medical record ID:");
         Integer mr_id = sc.nextInt();
-        printWriter.println(mr_id);
+        //printWriter.println(mr_id);
+        String mrID = String.valueOf(mr_id);
+        byte[] encryptedMrId = encryptDataWithPublicKey(mrID, publicKey);
+        printWriter.println(Base64.getEncoder().encodeToString(encryptedMrId));
 
         String mrNull = bufferedReader.readLine();
         if (mrNull.equals("NULL")){
@@ -315,7 +350,10 @@ public class MainClient {
                     //choose dn id
                     System.out.println("Please choose a doctors note ID:");
                     Integer dn_id = sc.nextInt();
-                    printWriter.println(dn_id);
+                    //printWriter.println(dn_id);
+                    String dnID = String.valueOf(dn_id);
+                    byte[] encryptedDnId = encryptDataWithPublicKey(dnID, publicKey);
+                    printWriter.println(Base64.getEncoder().encodeToString(encryptedDnId));
 
                     String dnNull = bufferedReader .readLine();
                     if (dnNull.equals("NULL")){
@@ -414,7 +452,7 @@ public class MainClient {
      * Sends the medical record to the server for it to be stored in the database.
      * @throws IOException in case of Input/Output exception.
      */
-    private static void sendMedicalRecord() throws IOException {
+    private static void sendMedicalRecord() throws Exception {
         MedicalRecord mr = (patient.chooseMR());
         if (mr == null) {
             System.out.println("You don't have any medical records, create one first...");
@@ -425,7 +463,7 @@ public class MainClient {
         printWriter.println(command);
 
         System.out.println("Sending medical record...");
-        patient.sendMedicalRecord(mr, printWriter);
+        patient.sendMedicalRecord(mr, printWriter, publicKey);
         //Receives approval
         String approval = bufferedReader.readLine();
         if (approval.equals("MEDICALRECORD_SUCCESS")) {
@@ -433,6 +471,20 @@ public class MainClient {
         } else {
             System.out.println("Couldn't send Medical Record. Please, try again.");
         }
+    }
+
+    /**
+     * Encrypts the given data using the specified RSA public key.
+     *
+     * @param data the plain text data to be encrypted
+     * @param publicKey the RSA public key used for encryption
+     * @return a byte array containing the encrypted data
+     * @throws Exception if an error occurs during the encryption process, such as issues with the cipher instance
+     */
+    public static byte[] encryptDataWithPublicKey(String data, RSAPublicKey publicKey) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        return cipher.doFinal(data.getBytes());
     }
 }
 

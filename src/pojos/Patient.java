@@ -8,12 +8,12 @@ import data.Data;
 import data.EMG;
 
 import javax.bluetooth.RemoteDevice;
+import javax.crypto.Cipher;
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.interfaces.RSAPublicKey;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -303,32 +303,81 @@ public class Patient {
     }
 
     /**
-     * Send the Medical Record to the server for the doctor to see
+     * Send the Medical Record to the server for the doctor to see, it is encrypted
      *
      * @param medicalRecord complete Medical Record
-     * @param printWriter to send data
+     * @param printWriter   to send data
+     * @param publicKey to encrypt data
      * @throws IOException in case the connection fails
      */
-    public void sendMedicalRecord(MedicalRecord medicalRecord, PrintWriter printWriter) throws IOException {
+    public void sendMedicalRecord(MedicalRecord medicalRecord, PrintWriter printWriter, RSAPublicKey publicKey) throws Exception {
         System.out.println("Connection established... sending text");
-        printWriter.println(medicalRecord.getPatientName());
-        printWriter.println(medicalRecord.getPatientSurname());
-        printWriter.println(medicalRecord.getAge());//int
-        printWriter.println(medicalRecord.getWeight());//double
-        printWriter.println(medicalRecord.getHeight());//int
-        //symptoms
+        //printWriter.println(medicalRecord.getPatientName());
+        String encryptedPatientName = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(medicalRecord.getPatientName(), publicKey)
+        );
+        printWriter.println(encryptedPatientName);
+        //printWriter.println(medicalRecord.getPatientSurname());
+        String encryptedPatientSurname = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(medicalRecord.getPatientSurname(), publicKey)
+        );
+        printWriter.println(encryptedPatientSurname);
+        //printWriter.println(medicalRecord.getAge());//int
+        String age = String.valueOf(medicalRecord.getAge());
+        String encryptedAge = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(age, publicKey)
+        );
+        printWriter.println(encryptedAge);
+        //printWriter.println(medicalRecord.getWeight());//double
+        String weight = String.valueOf(medicalRecord.getWeight());
+        String encryptedWeight = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(weight, publicKey)
+        );
+        printWriter.println(encryptedWeight);
+        //printWriter.println(medicalRecord.getHeight());//int
+        String height = String.valueOf(medicalRecord.getHeight());
+        String encryptedHeight = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(height, publicKey)
+        );
+        printWriter.println(encryptedHeight);
+        /*symptoms
         String symptoms = joinWithCommas(medicalRecord.getSymptoms());
-        printWriter.println(symptoms);
-        //timestamp
+        printWriter.println(symptoms);*/
+        String symptoms = joinWithCommas(medicalRecord.getSymptoms());
+        String encryptedSymptoms = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(symptoms, publicKey)
+        );
+        printWriter.println(encryptedSymptoms);
+        /*timestamp
         String time = joinIntegersWithCommas(medicalRecord.getAcceleration().getTimestamp());
-        printWriter.println(time);
-        //acc
+        printWriter.println(time);*/
+        String timestamp = joinIntegersWithCommas(medicalRecord.getAcceleration().getTimestamp());
+        String encryptedTimestamp = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(timestamp, publicKey)
+        );
+        printWriter.println(encryptedTimestamp);
+        /*acc
         String acc = joinIntegersWithCommas(medicalRecord.getAcceleration().getSignalData());
-        printWriter.println(acc);
-        //emg
+        printWriter.println(acc);*/
+        String acceleration = joinIntegersWithCommas(medicalRecord.getAcceleration().getSignalData());
+        String encryptedAcceleration = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(acceleration, publicKey)
+        );
+        printWriter.println(encryptedAcceleration);
+        /* emg
         String emg = joinIntegersWithCommas(medicalRecord.getEmg().getSignalData());
-        printWriter.println(emg);
-        printWriter.println(medicalRecord.getGenetic_background());//boolean
+        printWriter.println(emg);*/
+        String emg = joinIntegersWithCommas(medicalRecord.getEmg().getSignalData());
+        String encryptedEmg = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(emg, publicKey)
+        );
+        printWriter.println(encryptedEmg);
+        //printWriter.println(medicalRecord.getGenetic_background());//boolean
+        String geneticBackground = String.valueOf(medicalRecord.getGenetic_background());
+        String encryptedGeneticBackground = Base64.getEncoder().encodeToString(
+                encryptDataWithPublicKey(geneticBackground, publicKey)
+        );
+        printWriter.println(encryptedGeneticBackground);
     }
 
     /**
@@ -353,4 +402,17 @@ public class Patient {
                 .collect(Collectors.joining(","));
     }
 
+    /**
+     * Encrypts the given data using the specified RSA public key.
+     *
+     * @param data the plain text data to be encrypted
+     * @param publicKey the RSA public key used for encryption
+     * @return a byte array containing the encrypted data
+     * @throws Exception if an error occurs during the encryption process, such as issues with the cipher instance
+     */
+    public static byte[] encryptDataWithPublicKey(String data, RSAPublicKey publicKey) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        return cipher.doFinal(data.getBytes());
+    }
 }

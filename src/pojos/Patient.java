@@ -348,30 +348,30 @@ public class Patient {
                 encryptDataWithPublicKey(symptoms, publicKey)
         );
         printWriter.println(encryptedSymptoms);
-        /*timestamp
+        //timestamp
         String time = joinIntegersWithCommas(medicalRecord.getAcceleration().getTimestamp());
-        printWriter.println(time);*/
-        String timestamp = joinIntegersWithCommas(medicalRecord.getAcceleration().getTimestamp());
+        printWriter.println(time);
+        /*String timestamp = joinIntegersWithCommas(medicalRecord.getAcceleration().getTimestamp());
         String encryptedTimestamp = Base64.getEncoder().encodeToString(
                 encryptDataWithPublicKey(timestamp, publicKey)
         );
-        printWriter.println(encryptedTimestamp);
-        /*acc
+        printWriter.println(encryptedTimestamp);*/
+        //acc
         String acc = joinIntegersWithCommas(medicalRecord.getAcceleration().getSignalData());
-        printWriter.println(acc);*/
-        String acceleration = joinIntegersWithCommas(medicalRecord.getAcceleration().getSignalData());
+        printWriter.println(acc);
+       /* String acceleration = joinIntegersWithCommas(medicalRecord.getAcceleration().getSignalData());
         String encryptedAcceleration = Base64.getEncoder().encodeToString(
                 encryptDataWithPublicKey(acceleration, publicKey)
         );
-        printWriter.println(encryptedAcceleration);
-        /* emg
+        printWriter.println(encryptedAcceleration);*/
+        //emg
         String emg = joinIntegersWithCommas(medicalRecord.getEmg().getSignalData());
-        printWriter.println(emg);*/
-        String emg = joinIntegersWithCommas(medicalRecord.getEmg().getSignalData());
+        printWriter.println(emg);
+        /*String emg = joinIntegersWithCommas(medicalRecord.getEmg().getSignalData());
         String encryptedEmg = Base64.getEncoder().encodeToString(
                 encryptDataWithPublicKey(emg, publicKey)
         );
-        printWriter.println(encryptedEmg);
+        printWriter.println(encryptedEmg);*/
         //printWriter.println(medicalRecord.getGenetic_background());//boolean
         String geneticBackground = String.valueOf(medicalRecord.getGenetic_background());
         String encryptedGeneticBackground = Base64.getEncoder().encodeToString(

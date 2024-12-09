@@ -76,7 +76,12 @@ import javax.microedition.io.StreamConnection;
 	private DataOutputStream oStream = null;
 	
 	public BITalino() {}
-	
+
+	 /**
+	  *  Busca dispositivos Bluetooth en el entorno. Devuelve una lista de dispositivos detectados.
+	  * @return
+	  * @throws InterruptedException
+	  */
 	public Vector<RemoteDevice> findDevices() throws InterruptedException
 	{
 	        /** Searches for Bluetooth devices in range.
@@ -172,7 +177,8 @@ import javax.microedition.io.StreamConnection;
 			throw new BITalinoException(BITalinoErrorTypes.SAMPLING_RATE_NOT_DEFINED);
 		}
 	}
-	
+
+	//OJO! aquí le especifico de qué canales quiero coger los datos
 	public void start(int[] anChannels) throws Throwable 
 	{
                 /** Starts a signal acquisition from the device.

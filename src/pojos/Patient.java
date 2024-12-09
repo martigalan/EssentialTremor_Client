@@ -107,7 +107,7 @@ public class Patient {
         record.setPatientName(this.name);
         record.setPatientSurname(this.surname);
         record.setGenetic_background(this.genetic_background);
-        Data data = obtainData();
+        Data data = obtainData(); //aquí cojo las señales del BITalino
         record.setAcceleration(data.getAcc());
         record.setEmg(data.getEmg());
         this.getMedicalRecords().add(record);
@@ -139,7 +139,7 @@ public class Patient {
 
             //0--1= EMG
             //5--6=ACC
-            int[] channelsToAcquire = {0, 5};
+            int[] channelsToAcquire = {0, 5}; //aquí le digo EXACTAMENTE de qué canales quiero que coja los datos
             bitalino.start(channelsToAcquire);
 
             //Objects EMG and ACC

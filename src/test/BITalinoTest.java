@@ -21,22 +21,23 @@ public class BITalinoTest {
 
     @Test
     public void testBITalinoConnection() {
-        bitalino = null;
-        Frame[] frame;
+        bitalino = null; //inicializamos objeto
+        Frame[] frame; //almacena datos adquiridos del dispositivo
         try {
             bitalino = new BITalino();
 
-            Vector<RemoteDevice> devices = bitalino.findDevices();
+            Vector<RemoteDevice> devices = bitalino.findDevices(); //is used to manage detected Bluetooth devices
 
-            String macAddress = "20:17:11:20:51:27";
+            String macAddress = "20:17:11:20:51:27"; //se puede cambiar por IP Address de tu BITalino
 
             //Sampling rate, should be 10, 100 or 1000
             int SamplingRate = 100;
             bitalino.open(macAddress, SamplingRate);
 
+            //check if isOpen() method is true (if is connected, this method returns true)
             assertTrue(bitalino.isOpen(), "Couldn't stablish connexion with BITalino.");
 
-            int[] channelsToAcquire = {0, 5};
+            int[] channelsToAcquire = {0, 5}; //0, EMG. 5, ACC
             bitalino.start(channelsToAcquire);
 
             //Objects EMG and ACC
